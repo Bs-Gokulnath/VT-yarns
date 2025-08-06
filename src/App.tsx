@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
-import ComfortSection from './components/ComfortSection';
+import ComfortSection from './components/Yarns';
 import ProductsSection from './components/ProductsSection';
 import SustainabilitySection from './components/SustainabilitySection';
 import NewsSection from './components/NewsSection';

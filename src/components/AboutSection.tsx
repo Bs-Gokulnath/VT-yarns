@@ -166,7 +166,7 @@ export default function AboutSection() {
         <img
           src="/public/assets/sample1.png"
           alt="Factory workers"
-          className="w-full max-w-[700px] h-[500px] object-cover rounded-none md:rounded-l-2xl"
+          className="w-full max-w-[700px] h-[550px] object-cover rounded-none md:rounded-l-2xl"
           loading="lazy"
         />
       </div>
