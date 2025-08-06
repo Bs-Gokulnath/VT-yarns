@@ -20,37 +20,37 @@ export default function Header() {
           <nav className="hidden lg:flex items-center">
             <a
               href="#home"
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mr-8"
+              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
             >
               About
             </a>
             <a
               href="#about"
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mr-8"
+              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
             >
               Yarns
             </a>
             <a
               href="#products"
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mr-8"
+              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
             >
               Manufacturing
             </a>
             <a
               href="#services"
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mr-8"
+              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
             >
               Sustainability
             </a>
             <a
               href="#news"
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mr-8"
+              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
             >
               Certifications
             </a>
             <a
               href="#contact"
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium"
+              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium"
             >
               Contact
             </a>
@@ -59,7 +59,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4">
             <button
-              className="block lg:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
+              className="block lg:hidden p-2 text-gray-700 hover:text-green-600 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -74,37 +74,37 @@ export default function Header() {
             <nav className="flex flex-col pt-4">
               <a
                 href="#home"
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mb-6"
+                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
               >
                 About
               </a>
               <a
                 href="#about"
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mb-6"
+                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
               >
                 Yarns
               </a>
               <a
                 href="#products"
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mb-6"
+                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
               >
                 Manufacturing
               </a>
               <a
                 href="#services"
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mb-6"
+                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
               >
                 Sustainability
               </a>
               <a
                 href="#news"
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium mb-6"
+                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
               >
                 Certifications
               </a>
               <a
                 href="#contact"
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-300 font-medium"
+                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium"
               >
                 Contact
               </a>

@@ -5,7 +5,7 @@ import AboutSection from './components/AboutSection';
 import ComfortSection from './components/Yarns';
 import ProductsSection from './components/ProductsSection';
 import SustainabilitySection from './components/SustainabilitySection';
-import NewsSection from './components/NewsSection';
+import NewsSection from './components/Certificates';
 import Footer from './components/Footer';
 
 export default function App() {
