@@ -66,7 +66,54 @@
 
 
 
-import React from "react";
+// import React from "react";
+
+// const LOGOS = [
+//   "/assets/cert1.png",
+//   "/assets/cert2.png",
+//   "/assets/cert3.png",
+//   "/assets/cert4.png",
+//   "/assets/cert5.png",
+// ];
+
+// // Tailwind: Add the keyframes to your tailwind.config.js if needed for production
+// // Here, CSS-in-JS is used directly below for demo/paste ease
+
+// export default function LogoMarquee() {
+//   return (
+//     <div className="w-full bg-white py-5 px-0 overflow-hidden border-y border-gray-200">
+//       <div className="relative w-full">
+//         {/* Marquee container */}
+//         <div className="flex items-center gap-10 marquee-logo-strip">
+//           {/* Repeat the list twice for smooth infinite loop */}
+//           {[...LOGOS, ...LOGOS].map((src, idx) => (
+//             <img
+//               key={`${src}-${idx}`}
+//               src={src}
+//               alt={`Certification Logo ${((idx % LOGOS.length) + 1)}`}
+//               className="h-20 md:h-24 w-auto object-contain select-none"
+//               draggable={false}
+//               style={{ flex: "0 0 auto" }}
+//             />
+//           ))}
+//         </div>
+//       </div>
+//       {/* Animation style (Can be moved to CSS file or Tailwind config for prod) */}
+//       <style>{`
+//         .marquee-logo-strip {
+//           animation: marquee-X 14s linear infinite;
+//         }
+//         @keyframes marquee-X {
+//           0% { transform: translateX(0);}
+//           100% { transform: translateX(-50%);}
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+import React, { useEffect, useRef, useState } from "react";
 
 const LOGOS = [
   "/assets/cert1.png",
@@ -76,38 +123,96 @@ const LOGOS = [
   "/assets/cert5.png",
 ];
 
-// Tailwind: Add the keyframes to your tailwind.config.js if needed for production
-// Here, CSS-in-JS is used directly below for demo/paste ease
-
 export default function LogoMarquee() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [showText, setShowText] = useState(true);
+
+  // Intersection Observer to detect when component is on screen
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Once visible, after 3 seconds switch from text to running strip
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const timer = setTimeout(() => {
+      setShowText(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [isVisible]);
+
   return (
-    <div className="w-full bg-white py-5 px-0 overflow-hidden border-y border-gray-200">
-      <div className="relative w-full">
-        {/* Marquee container */}
-        <div className="flex items-center gap-10 marquee-logo-strip">
-          {/* Repeat the list twice for smooth infinite loop */}
-          {[...LOGOS, ...LOGOS].map((src, idx) => (
-            <img
-              key={`${src}-${idx}`}
-              src={src}
-              alt={`Certification Logo ${((idx % LOGOS.length) + 1)}`}
-              className="h-20 md:h-24 w-auto object-contain select-none"
-              draggable={false}
-              style={{ flex: "0 0 auto" }}
-            />
-          ))}
+    <div
+      ref={containerRef}
+      className="w-full bg-white py-5 px-0 overflow-hidden border-y border-gray-200 flex items-center justify-center"
+      style={{ minHeight: "10rem" }}
+    >
+      {showText ? (
+        // Initial static text for 3 seconds
+        <span className="text-gray-700 font-semibold text-xl uppercase select-none">
+          CERTIFICATES
+        </span>
+      ) : (
+        // Running logos marquee after 3 seconds
+        <div className="relative w-full">
+          <div
+            className="flex items-center gap-10 marquee-logo-strip"
+            style={{ whiteSpace: "nowrap" }}
+          >
+            {[...LOGOS, ...LOGOS].map((src, idx) => {
+              const isCert5 = src.includes("cert5.png");
+              return (
+                <img
+                  key={`${src}-${idx}`}
+                  src={src}
+                  alt={`Certification Logo ${((idx % LOGOS.length) + 1)}`}
+                  className={`w-auto object-contain select-none`}
+                  draggable={false}
+                  style={{
+                    flex: "0 0 auto",
+                    height: isCert5 ? (window.innerWidth >= 768 ? 72 : 40) : undefined,
+                    // 72px on md+ screens, 40px on smaller screens for cert5
+                    // Other logos use Tailwind h-20 md:h-24 classes below
+                  }}
+                  // For other logos, use tailwind heights:
+                  {...(!isCert5 && {
+                    className:
+                      "h-20 md:h-24 w-auto object-contain select-none",
+                  })}
+                />
+              );
+            })}
+          </div>
+          {/* Animation CSS */}
+          <style>{`
+            .marquee-logo-strip {
+              animation: marquee-X 14s linear infinite;
+            }
+            @keyframes marquee-X {
+              0% { transform: translateX(0);}
+              100% { transform: translateX(-50%);}
+            }
+          `}</style>
         </div>
-      </div>
-      {/* Animation style (Can be moved to CSS file or Tailwind config for prod) */}
-      <style>{`
-        .marquee-logo-strip {
-          animation: marquee-X 14s linear infinite;
-        }
-        @keyframes marquee-X {
-          0% { transform: translateX(0);}
-          100% { transform: translateX(-50%);}
-        }
-      `}</style>
+      )}
     </div>
   );
 }

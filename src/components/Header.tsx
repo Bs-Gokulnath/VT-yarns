@@ -1,113 +1,215 @@
-import { useState } from "react";
+// import { useState } from "react";
+
+// export default function Header() {
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+//   return (
+//     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
+//       <div className="container mx-auto px-6 py-4">
+//         <div className="flex items-center justify-between">
+//           {/* Logo */}
+//           <div className="flex items-center space-x-3">
+//             <img
+//               src="/assets/vts-logo.png"
+//               alt="Company Logo"
+//               className="w-40 h-12 object-contain"
+//             />
+//           </div>
+
+//           {/* Desktop Nav */}
+//           <nav className="hidden lg:flex items-center">
+//             {[
+//               { href: "#home", label: "About" },
+//               { href: "#about", label: "Yarns" },
+//               { href: "#products", label: "Manufacturing" },
+//               { href: "#services", label: "Sustainability" },
+//               { href: "#news", label: "Certifications" },
+//               { href: "#contact", label: "Contact" },
+//             ].map((link, i) => (
+//               <a
+//                 key={i}
+//                 href={link.href}
+//                 className="text-gray-700 hover:text-green-500 transition duration-300 font-medium mr-8 last:mr-0"
+//               >
+//                 {link.label}
+//               </a>
+//             ))}
+//           </nav>
+
+//           {/* Mobile Menu Button */}
+//           <div className="lg:hidden z-50">
+//             <button
+//               onClick={() => setIsMenuOpen(!isMenuOpen)}
+//               aria-label="Toggle menu"
+//               className="text-gray-800 hover:text-green-600 transition-colors focus:outline-none"
+//             >
+//               {/* SVG Hamburger Icon */}
+//               <svg
+//                 className="w-8 h-8"
+//                 fill="none"
+//                 stroke="currentColor"
+//                 viewBox="0 0 24 24"
+//                 xmlns="http://www.w3.org/2000/svg"
+//               >
+//                 <path
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                   strokeWidth={2}
+//                   d="M4 6h16M4 12h16M4 18h16"
+//                 />
+//               </svg>
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Mobile Dropdown */}
+//         {isMenuOpen && (
+//           <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
+//             <nav className="flex flex-col pt-4">
+//               {[
+//                 { href: "#home", label: "About" },
+//                 { href: "#about", label: "Yarns" },
+//                 { href: "#products", label: "Manufacturing" },
+//                 { href: "#services", label: "Sustainability" },
+//                 { href: "#news", label: "Certifications" },
+//                 { href: "#contact", label: "Contact" },
+//               ].map((link, i) => (
+//                 <a
+//                   key={i}
+//                   href={link.href}
+//                   className="text-gray-700 hover:text-green-500 transition duration-300 font-medium mb-6 last:mb-0"
+//                 >
+//                   {link.label}
+//                 </a>
+//               ))}
+//             </nav>
+//           </div>
+//         )}
+//       </div>
+//     </header>
+//   );
+// }
+
+
+
+
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+
+  // Update active section on scroll
+  useEffect(() => {
+    const sections = [
+      "about",
+      "yarns",
+      "products",
+      "sustainability",
+      "certifications",
+      "contact",
+    ];
+    const handleScroll = () => {
+      let current = "";
+      for (const id of sections) {
+        const section = document.getElementById(id);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            current = id;
+            break;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { href: "#about", id: "about", label: "About" },
+    { href: "#yarns", id: "yarns", label: "Yarns" },
+    { href: "#products", id: "products", label: "Manufacturing" },
+    { href: "#sustainability", id: "sustainability", label: "Sustainability" },
+    { href: "#certifications", id: "certifications", label: "Certifications" },
+    { href: "#contact", id: "contact", label: "Contact" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Company Logo Section */}
+          {/* Logo */}
           <div className="flex items-center space-x-3">
             <img
-              src="/assets/vts-logo.png" // Make sure your logo is in the public folder
+              src="/assets/vts-logo.png"
               alt="Company Logo"
               className="w-40 h-12 object-contain"
             />
           </div>
 
-          {/* Navigation Menu */}
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center">
-            <a
-              href="#home"
-              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
-            >
-              About
-            </a>
-            <a
-              href="#about"
-              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
-            >
-              Yarns
-            </a>
-            <a
-              href="#products"
-              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
-            >
-              Manufacturing
-            </a>
-            <a
-              href="#services"
-              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
-            >
-              Sustainability
-            </a>
-            <a
-              href="#news"
-              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mr-8"
-            >
-              Certifications
-            </a>
-            <a
-              href="#contact"
-              className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium"
-            >
-              Contact
-            </a>
+            {navLinks.map((link, i) => (
+              <a
+                key={i}
+                href={link.href}
+                className={`transition duration-300 font-medium mr-8 last:mr-0 ${
+                  activeSection === link.id
+                    ? "text-green-500"
+                    : "text-gray-700 hover:text-green-500"
+                }`}
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-4">
+          <div className="lg:hidden z-50">
             <button
-              className="block lg:hidden p-2 text-gray-700 hover:text-green-600 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
+              className="text-gray-800 hover:text-green-600 transition-colors focus:outline-none"
             >
-              <i className="ri-menu-line text-xl"></i>
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Dropdown */}
         {isMenuOpen && (
           <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
             <nav className="flex flex-col pt-4">
-              <a
-                href="#home"
-                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
-              >
-                About
-              </a>
-              <a
-                href="#about"
-                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
-              >
-                Yarns
-              </a>
-              <a
-                href="#products"
-                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
-              >
-                Manufacturing
-              </a>
-              <a
-                href="#services"
-                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
-              >
-                Sustainability
-              </a>
-              <a
-                href="#news"
-                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium mb-6"
-              >
-                Certifications
-              </a>
-              <a
-                href="#contact"
-                className="text-gray-700 hover:text-green-500 transition-colors duration-300 font-medium"
-              >
-                Contact
-              </a>
+              {navLinks.map((link, i) => (
+                <a
+                  key={i}
+                  href={link.href}
+                  className={`transition duration-300 font-medium mb-6 last:mb-0 ${
+                    activeSection === link.id
+                      ? "text-green-500"
+                      : "text-gray-700 hover:text-green-500"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
             </nav>
           </div>
         )}
