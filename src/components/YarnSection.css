@@ -1,0 +1,35 @@
+.yarn-section {
+    background-image: url("/assets/yarn-bg.jpg"); /* Your yarn bg image */
+    position: relative;
+  }
+  
+  .yarn-title {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .yarn-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: screen;
+    z-index: -1;
+  }
+  
+  /* Orbit animation (optional if you want dynamic rotation) */
+  @keyframes rotateOrbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .orbit {
+    animation: rotateOrbit 10s linear infinite;
+  }
+  

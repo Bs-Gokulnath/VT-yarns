@@ -7,16 +7,22 @@ const MANUFACTURING_IMAGES = [
   { src: "/assets/manufacturing/warping.jpg", alt: "Warping" },
   { src: "/assets/manufacturing/sizing.jpeg", alt: "Sizing" },
   { src: "/assets/manufacturing/vortex_main.jpg", alt: "Vortex Main" },
-  { src: "/assets/manufacturing/ring spin.webp", alt: "Ring Spinning Process" },
+  { src: "/assets/manufacturing/ring spin.webp", alt: "Ring Spinning" },
 ];
 
 export default function ManufacturingSection() {
   return (
     <section id="products" className="w-full bg-white py-12 flex flex-col items-center">
       {/* Title */}
-      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-18 mt-[-45px]">
-        Manufacturing
-      </h2>
+      
+      <div className="text-center mb-16">
+          <span className="text-green-600 font-semibold text-sm tracking-wider uppercase pt-10">
+            OUR PRODUCTION
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-4">
+            Manufacturing
+          </h2>
+        </div>
 
       {/* Zig-Zag Row of Images */}
       <div className="flex justify-center gap-1">
@@ -28,7 +34,7 @@ export default function ManufacturingSection() {
             }`}
           >
             <div
-              className="w-24 md:w-32 h-80 md:h-100 bg-gray-100 overflow-hidden 
+              className="w-24 md:w-32 h-80 md:h-90 bg-gray-100 overflow-hidden 
                          transition-all duration-300 ease-in-out 
                          group-hover:w-28 md:group-hover:w-60 
                          group-hover:scale-110 group-hover:shadow-2xl relative"

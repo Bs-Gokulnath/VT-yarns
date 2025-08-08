@@ -3,7 +3,7 @@ import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
 import ComfortSection from './components/Yarns';
-import ProductsSection from './components/ProductsSection';
+import ProductsSection from './components/Manufacturing';
 import SustainabilitySection from './components/SustainabilitySection';
 import NewsSection from './components/Certificates';
 import Footer from './components/Footer';
