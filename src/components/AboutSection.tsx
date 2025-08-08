@@ -309,7 +309,7 @@ export default function AboutSection() {
       </div>
 
       {/* Animation Keyframes */}
-      <style jsx>{`
+      <style>{`
         .animate-fade-in {
           animation: fadeIn 1s ease-in 0s both;
         }
