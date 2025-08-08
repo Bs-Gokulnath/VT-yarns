@@ -1,72 +1,4 @@
-// export default function NewsSection() {
-//   const news = [
-//     {
-//       image: 'https://readdy.ai/api/search-image?query=Modern%20textile%20manufacturing%20facility%20interior%20with%20advanced%20machinery%20and%20equipment%2C%20professional%20industrial%20photography%2C%20clean%20bright%20environment%20with%20workers%20in%20safety%20gear%2C%20sustainable%20production%20setting%20with%20natural%20lighting&width=400&height=250&seq=news1&orientation=landscape',
-//       title: 'Sure Runco Textile Industry',
-//       description: 'The newest edition of APR News newsletter is here! Our second quarter has seen sustainable innovations and partnerships.',
-//       category: 'Industry News'
-//     },
-//     {
-//       image: 'https://readdy.ai/api/search-image?query=Corporate%20business%20meeting%20with%20executives%20discussing%20sustainability%20initiatives%2C%20professional%20conference%20room%20setting%20with%20presentation%20displays%2C%20modern%20office%20environment%20with%20natural%20lighting%2C%20focus%20on%20collaboration%20and%20innovation&width=400&height=250&seq=news2&orientation=landscape',
-//       title: 'New APR Investment: Kamsma Textile Industry Develops High-Quality Viscose Products',
-//       description: 'Since 2010, APR has collaborated with various textile manufacturers to develop high-quality viscose products.',
-//       category: 'Investment'
-//     },
-//     {
-//       image: 'https://readdy.ai/api/search-image?query=Sustainable%20forest%20management%20and%20renewable%20wood%20harvesting%20operations%2C%20environmental%20conservation%20photography%2C%20workers%20managing%20responsible%20forestry%20practices%2C%20green%20forest%20background%20with%20natural%20lighting%20highlighting%20sustainability&width=400&height=250&seq=news3&orientation=landscape',
-//       title: 'Investment Success: APR Group',
-//       description: 'APR Group, a leading textile and apparel manufacturer, has shown remarkable growth in sustainable practices.',
-//       category: 'Success Story'
-//     }
-//   ];
-
-//   return (
-//     <section id="news" className="py-20 bg-white">
-//       <div className="container mx-auto px-6">
-//         <div className="text-center mb-16">
-//           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Latest News & Updates</h2>
-//           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-//             Stay informed about our latest developments, partnerships, and sustainability initiatives
-//           </p>
-//         </div>
-
-//         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-//           {news.map((item, index) => (
-//             <article key={index} className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100">
-//               <div className="relative overflow-hidden">
-//                 <img
-//                   src={item.image}
-//                   alt={item.title}
-//                   className="w-full h-48 object-cover object-top hover:scale-105 transition-transform duration-300"
-//                 />
-//                 <div className="absolute top-4 left-4">
-//                   <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-//                     {item.category}
-//                   </span>
-//                 </div>
-//               </div>
-              
-//               <div className="p-6">
-//                 <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors cursor-pointer">
-//                   {item.title}
-//                 </h3>
-//                 <p className="text-gray-600 mb-4 line-clamp-3">{item.description}</p>
-                
-//                 <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors cursor-pointer whitespace-nowrap">
-//                   Read More →
-//                 </button>
-//               </div>
-//             </article>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
-
-
-
-// import React from "react";
+// import React, { useState, useEffect } from "react";
 
 // const LOGOS = [
 //   "/assets/cert1.png",
@@ -76,44 +8,87 @@
 //   "/assets/cert5.png",
 // ];
 
-// // Tailwind: Add the keyframes to your tailwind.config.js if needed for production
-// // Here, CSS-in-JS is used directly below for demo/paste ease
+// export default function LogoCertificationSection() {
+//   const [isCombined, setIsCombined] = useState(false);
+//   const [activeCert, setActiveCert] = useState<string | null>(null);
+//   const [showPreview, setShowPreview] = useState(false);
 
-// export default function LogoMarquee() {
+//   const handleCombine = (src: string) => {
+//     setActiveCert(src);
+//     setIsCombined(true);
+//   };
+
+//   const handleExpand = () => {
+//     setIsCombined(false);
+//     setActiveCert(null);
+//     setShowPreview(false);
+//   };
+
+//   // Trigger smooth transition after render
+//   useEffect(() => {
+//     if (isCombined && activeCert) {
+//       const timeout = setTimeout(() => setShowPreview(true), 50); // small delay for animation
+//       return () => clearTimeout(timeout);
+//     }
+//   }, [isCombined, activeCert]);
+
 //   return (
-//     <div className="w-full bg-white py-5 px-0 overflow-hidden border-y border-gray-200">
-//       <div className="relative w-full">
-//         {/* Marquee container */}
-//         <div className="flex items-center gap-10 marquee-logo-strip">
-//           {/* Repeat the list twice for smooth infinite loop */}
-//           {[...LOGOS, ...LOGOS].map((src, idx) => (
+//     <section className="w-full bg-white flex flex-col items-center px-4">
+//       {/* Title */}
+//       <div className="text-center mb-10">
+//         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide mb-2">
+//           CERTIFICATIONS
+//         </h2>
+//         <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-2"></div>
+//       </div>
+
+//       {/* Display Section */}
+//       {!isCombined ? (
+//         <div className="flex flex-row justify-center items-center gap-8 md:gap-16 w-full transition-all duration-700">
+//           {LOGOS.map((src, idx) => (
 //             <img
-//               key={`${src}-${idx}`}
+//               key={src}
 //               src={src}
-//               alt={`Certification Logo ${((idx % LOGOS.length) + 1)}`}
-//               className="h-20 md:h-24 w-auto object-contain select-none"
+//               alt={`Certification Logo ${idx + 1}`}
+//               className={`object-contain cursor-pointer hover:scale-105 transition duration-300 ${
+//                 idx === 4 ? "w-[100px] h-[100px]" : "w-[200px] h-[430px]"
+//               }`}
 //               draggable={false}
-//               style={{ flex: "0 0 auto" }}
+//               onClick={() => handleCombine(src)}
 //             />
 //           ))}
 //         </div>
-//       </div>
-//       {/* Animation style (Can be moved to CSS file or Tailwind config for prod) */}
-//       <style>{`
-//         .marquee-logo-strip {
-//           animation: marquee-X 14s linear infinite;
-//         }
-//         @keyframes marquee-X {
-//           0% { transform: translateX(0);}
-//           100% { transform: translateX(-50%);}
-//         }
-//       `}</style>
-//     </div>
+//       ) : (
+//         <div className="relative flex flex-col md:flex-row justify-between items-center gap-2 w-full max-w-5xl transition-all duration-700">
+//           {/* Combined Circular Tile on Left */}
+//           <div
+//             onClick={handleExpand}
+//             className="cursor-pointer w-[150px] h-[150px] rounded-full bg-green-100 flex items-center justify-center shadow-lg hover:scale-105 transition-transform duration-500"
+//           >
+//             <span className="text-xl font-semibold text-green-800">Certificates</span>
+//           </div>
+
+//           {/* Certificate Preview on Right */}
+//           {activeCert && (
+//             <div className="w-full md:w-1/2 flex justify-center items-center">
+//               <img
+//                 src={activeCert}
+//                 alt="Active Certification Preview"
+//                 className={`w-[300px] h-[300px] object-contain rounded-md shadow-md transition-all duration-700 ease-in-out transform ${
+//                   showPreview ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+//                 }`}
+//               />
+//             </div>
+//           )}
+//         </div>
+//       )}
+//     </section>
 //   );
 // }
 
 
-import React, { useEffect, useRef, useState } from "react";
+
+import React, { useState, useEffect } from "react";
 
 const LOGOS = [
   "/assets/cert1.png",
@@ -123,96 +98,81 @@ const LOGOS = [
   "/assets/cert5.png",
 ];
 
-export default function LogoMarquee() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [showText, setShowText] = useState(true);
+export default function LogoCertificationSection() {
+  const [isCombined, setIsCombined] = useState(false);
+  const [activeCert, setActiveCert] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
-  // Intersection Observer to detect when component is on screen
+  const handleCombine = (src: string) => {
+    setActiveCert(src);
+    setIsCombined(true);
+  };
+
+  const handleExpand = () => {
+    setIsCombined(false);
+    setActiveCert(null);
+    setShowPreview(false);
+  };
+
+  // Trigger smooth transition after render
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    if (isCombined && activeCert) {
+      const timeout = setTimeout(() => setShowPreview(true), 50); // small delay for animation
+      return () => clearTimeout(timeout);
     }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // Once visible, after 3 seconds switch from text to running strip
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const timer = setTimeout(() => {
-      setShowText(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [isVisible]);
+  }, [isCombined, activeCert]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full bg-white py-5 px-0 overflow-hidden border-y border-gray-200 flex items-center justify-center"
-      style={{ minHeight: "10rem" }}
-    >
-      {showText ? (
-        // Initial static text for 3 seconds
-        <span className="text-gray-700 font-semibold text-xl uppercase select-none">
-          CERTIFICATES
-        </span>
+    <section className="w-full bg-white flex flex-col items-center px-4">
+      {/* Title */}
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide mb-2">
+          CERTIFICATIONS
+        </h2>
+        <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-2"></div>
+      </div>
+
+      {/* Display Section */}
+      {!isCombined ? (
+        <div className="flex flex-row justify-center items-center gap-8 md:gap-16 w-full transition-all duration-700">
+          {LOGOS.map((src, idx) => (
+            <img
+              key={src}
+              src={src}
+              alt={`Certification Logo ${idx + 1}`}
+              className={`object-contain cursor-pointer hover:scale-105 transition duration-300 ${
+                // cert5 image size increased to match others
+                idx === 4 ? "w-[200px] h-[430px]" : "w-[200px] h-[430px]"
+              }`}
+              draggable={false}
+              onClick={() => handleCombine(src)}
+            />
+          ))}
+        </div>
       ) : (
-        // Running logos marquee after 3 seconds
-        <div className="relative w-full">
+        <div className="relative flex flex-col md:flex-row justify-between items-center gap-2 w-full max-w-5xl transition-all duration-700">
+          {/* Combined Circular Tile on Left */}
           <div
-            className="flex items-center gap-10 marquee-logo-strip"
-            style={{ whiteSpace: "nowrap" }}
+            onClick={handleExpand}
+            className="cursor-pointer w-[150px] h-[150px] rounded-full bg-green-100 flex items-center justify-center shadow-lg hover:scale-105 transition-transform duration-500"
           >
-            {[...LOGOS, ...LOGOS].map((src, idx) => {
-              const isCert5 = src.includes("cert5.png");
-              return (
-                <img
-                  key={`${src}-${idx}`}
-                  src={src}
-                  alt={`Certification Logo ${((idx % LOGOS.length) + 1)}`}
-                  className={`w-auto object-contain select-none`}
-                  draggable={false}
-                  style={{
-                    flex: "0 0 auto",
-                    height: isCert5 ? (window.innerWidth >= 768 ? 72 : 40) : undefined,
-                    // 72px on md+ screens, 40px on smaller screens for cert5
-                    // Other logos use Tailwind h-20 md:h-24 classes below
-                  }}
-                  // For other logos, use tailwind heights:
-                  {...(!isCert5 && {
-                    className:
-                      "h-20 md:h-24 w-auto object-contain select-none",
-                  })}
-                />
-              );
-            })}
+            <span className="text-xl font-semibold text-green-800">Certificates</span>
           </div>
-          {/* Animation CSS */}
-          <style>{`
-            .marquee-logo-strip {
-              animation: marquee-X 14s linear infinite;
-            }
-            @keyframes marquee-X {
-              0% { transform: translateX(0);}
-              100% { transform: translateX(-50%);}
-            }
-          `}</style>
+
+          {/* Certificate Preview on Right */}
+          {activeCert && (
+            <div className="w-full md:w-1/2 flex justify-center items-center">
+              <img
+                src={activeCert}
+                alt="Active Certification Preview"
+                className={`w-[300px] h-[450px] object-contain rounded-md shadow-md transition-all duration-700 ease-in-out transform ${
+                  showPreview ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+              />
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </section>
   );
 }
