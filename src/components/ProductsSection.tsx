@@ -1,5 +1,3 @@
-import React from "react";
-
 const MANUFACTURING_IMAGES = [
   { src: "/assets/manufacturing/blow-room.jpg", alt: "Blow Room" },
   { src: "/assets/manufacturing/carding.jpg", alt: "Carding" },

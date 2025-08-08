@@ -1,5 +1,3 @@
-import React from "react";
-
 type Commitment = {
   icon?: string;
   title?: string;
