@@ -161,7 +161,7 @@
 
 
 
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 
 // Count-up animation hook only starts when `start` is true
 function useCountUp(end: number, start: boolean, duration = 2000) {

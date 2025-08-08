@@ -88,7 +88,7 @@
 
 
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const LOGOS = [
   "/assets/cert1.png",
