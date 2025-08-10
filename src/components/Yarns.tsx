@@ -543,6 +543,336 @@
 
 
 
+// import { useState, useEffect } from "react";
+
+// const LOGOS = [
+//   { src: "/assets/viscose.png", alt: "Viscose" },
+//   { src: "/assets/modal.png", alt: "Modal" },
+//   { src: "/assets/excel.jpg", alt: "Excel" },
+//   { src: "/assets/liveco.png", alt: "Liveco" },
+//   { src: "/assets/bamboo.jpg", alt: "Bamboo" },
+//   { src: "/assets/circulose.png", alt: "Circulose" },
+//   { src: "/assets/tencel.png", alt: "Tencel" },
+//   { src: "/assets/ecovera.png", alt: "Ecovera" },
+//   { src: "/assets/refinra.png", alt: "Refinra" },
+// ];
+
+// export default function YarnsSection() {
+//   const [animTime, setAnimTime] = useState(0);
+//   const [expanded, setExpanded] = useState(false);
+
+//   useEffect(() => {
+//     if (!expanded) return;
+//     let frame;
+//     const animate = () => {
+//       setAnimTime((prev) => (prev + 0.003) % 1); // slower rotation
+//       frame = requestAnimationFrame(animate);
+//     };
+//     frame = requestAnimationFrame(animate);
+//     return () => cancelAnimationFrame(frame);
+//   }, [expanded]);
+
+//   const center = { x: 200, y: 240 }; // SVG center
+//   const bgImageUrl = "/assets/yarnbg.png";
+
+//   return (
+//     <section className="relative w-full py-8 bg-white">
+//       <div className="px-[50px]">
+//         {/* Title */}
+//         {/* <div className="text-center mb-4 relative h-22 flex items-center justify-center">
+//           <video
+//             className="absolute inset-0 w-full h-full object-cover opacity-80"
+//             src="https://www.shutterstock.com/shutterstock/videos/1107376703/preview/stock-footage-panoramic-cinematic-shot-cotton-thread-manufacturing-in-a-textile-oil-factory-organic-cotton-yarn.webm"
+//             autoPlay
+//             loop
+//             muted
+//             playsInline
+//           />
+//           <h2
+//             className="relative text-6xl md:text-4xl font-extrabold text-transparent bg-clip-text z-10"
+//             style={{
+//               backgroundImage:
+//                 "linear-gradient(to right, rgb(255, 255, 255), rgba(255,255,255,0.8))",
+//               WebkitBackgroundClip: "text",
+//               WebkitTextFillColor: "transparent",
+//             }}
+//           >
+//             YARNS
+//           </h2>
+//         </div> */}
+
+//         <div className="text-center">
+//           {/* <span className="text-green-600 font-semibold text-sm tracking-wider uppercase pt-10">
+//             OUR COMMITMENT
+//           </span> */}
+//           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-4">
+//             Yarns
+//           </h2>
+//         </div>
+
+//         {/* Content */}
+//         <div className="relative w-full max-w-[1600px] mx-auto overflow-hidden">
+//           <div className="relative w-full flex flex-col md:flex-row justify-between items-stretch gap-4 px-6 py-6">
+            
+//             {/* LEFT SIDE */}
+//             <div className="relative w-full md:w-1/2 min-w-[330px] h-[480px] bg-white flex items-center justify-center">
+              
+//               {/* BEFORE CLICK — Rotating Yarn Image */}
+//               {!expanded && (
+//                 <img
+//                   src="/assets/yarn.png"
+//                   alt="Yarn"
+//                   onClick={() => setExpanded(true)}
+//                   className="w-72 h-72 rounded-full cursor-pointer animate-spin-slow hover:scale-105 transition-transform duration-300"
+//                 />
+//               )}
+
+//               {/* AFTER CLICK — Solar System Animation */}
+//               {expanded && (
+//                 <div className="relative w-full h-full">
+//                   <svg
+//                     viewBox="0 0 400 480"
+//                     className="absolute left-0 top-0 w-full h-full select-none pointer-events-none"
+//                   >
+//                     {LOGOS.map((logo, idx) => {
+//                       const angle =
+//                         (animTime + idx / LOGOS.length) * 2 * Math.PI;
+//                       const radius = 100 + (idx % 3) * 30;
+//                       const x = center.x + radius * Math.cos(angle);
+//                       const y = center.y + radius * Math.sin(angle);
+//                       return (
+//                         <image
+//                           key={logo.src}
+//                           href={logo.src}
+//                           alt={logo.alt}
+//                           x={x - 32} // bigger size
+//                           y={y - 32}
+//                           width={64}
+//                           height={64}
+//                           className="rounded-full shadow-xl"
+//                         />
+//                       );
+//                     })}
+
+//                     {/* Center Yarn Image (Click to Collapse) */}
+//                     <image
+//                       href="/assets/yarn-circle.png"
+//                       x={center.x - 50}
+//                       y={center.y - 50}
+//                       width={100}
+//                       height={100}
+//                       className="rounded-full cursor-pointer"
+//                       onClick={() => setExpanded(false)}
+//                       style={{ pointerEvents: "auto" }}
+//                     />
+//                   </svg>
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* RIGHT SIDE */}
+//             <div
+//               className="w-full md:w-1/2 h-[450px] relative z-10 flex flex-col justify-center items-start p-4 text-white space-y-3 overflow-y-auto"
+//               style={{
+//                 backgroundImage: `url(${bgImageUrl})`,
+//                 backgroundRepeat: "no-repeat",
+//                 backgroundSize: "cover",
+//                 backgroundPosition: "center",
+//                 backgroundAttachment: "fixed",
+//               }}
+//             >
+//               <span className="text-blue-200 font-medium text-xs tracking-wide uppercase">
+//                 Yarn Collection
+//               </span>
+//               <div className="mt-2">
+//                 <h4 className="text-base font-semibold text-white mb-1 underline underline-offset-4">
+//                   Count Range
+//                 </h4>
+//                 <p className="text-xs drop-shadow">
+//                   RING SPUN NE 12 - NE 80<br />
+//                   OPEN END NE 2 - NE 30
+//                 </p>
+//               </div>
+//               <div className="mt-1">
+//                 <h4 className="text-base font-semibold text-white mb-1 underline underline-offset-4">
+//                   Variety
+//                 </h4>
+//                 <ul className="text-xs list-disc list-inside drop-shadow space-y-0.5">
+//                   <li>RING</li>
+//                   <li>COMPACT</li>
+//                   <li>SIRO COMPACT</li>
+//                   <li>VORTEX</li>
+//                   <li>OPEN END</li>
+//                   <li>SLUB</li>
+//                   <li>HIGH TWIST</li>
+//                   <li>TFO</li>
+//                 </ul>
+//               </div>
+//             </div>
+
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+// /* Add to your CSS or Tailwind config */
+// <style jsx global>{`
+//   .animate-spin-slow {
+//     animation: spin 12s linear infinite; /* slower spin */
+//   }
+//   @keyframes spin {
+//     from { transform: rotate(0deg); }
+//     to { transform: rotate(360deg); }
+//   }
+// `}</style>
+
+
+
+// import { useState, useEffect } from "react";
+
+// const LOGOS = [
+//   { src: "/assets/viscose.png", alt: "Viscose" },
+//   { src: "/assets/modal.png", alt: "Modal" },
+//   { src: "/assets/excel.jpg", alt: "Excel" },
+//   { src: "/assets/liveco.png", alt: "Liveco" },
+//   { src: "/assets/bamboo.jpg", alt: "Bamboo" },
+//   { src: "/assets/circulose.png", alt: "Circulose" },
+//   { src: "/assets/tencel.png", alt: "Tencel" },
+//   { src: "/assets/ecovera.png", alt: "Ecovera" },
+//   { src: "/assets/refinra.png", alt: "Refinra" },
+// ];
+
+// export default function YarnsSection() {
+//   const [animTime, setAnimTime] = useState(0);
+//   const [expanded, setExpanded] = useState(true);
+
+//   useEffect(() => {
+//     let frame;
+//     const animate = () => {
+//       setAnimTime((prev) => (prev + 0.0008) % 1); // very slow rotation
+//       frame = requestAnimationFrame(animate);
+//     };
+//     frame = requestAnimationFrame(animate);
+//     return () => cancelAnimationFrame(frame);
+//   }, []);
+
+//   const center = { x: 200, y: 240 };
+//   const bgImageUrl = "/assets/yarnbg.png";
+
+//   return (
+//     <section className="relative w-full py-8 bg-white">
+//       <div className="px-[50px]">
+//         <div className="text-center">
+//           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-4">
+//             Yarns
+//           </h2>
+//         </div>
+
+//         <div className="relative w-full max-w-[1600px] mx-auto overflow-hidden">
+//           <div className="relative w-full flex flex-col md:flex-row justify-between items-stretch gap-4 px-6 py-6">
+            
+//             {/* LEFT SIDE — Solar System Animation */}
+//             <div className="relative w-full md:w-1/2 min-w-[330px] h-[480px] bg-white flex items-center justify-center">
+//               <div className="relative w-full h-full">
+//                 <svg
+//                   viewBox="0 0 400 480"
+//                   className="absolute left-0 top-0 w-full h-full select-none pointer-events-none"
+//                 >
+//                   {LOGOS.map((logo, idx) => {
+//                     const angle =
+//                       (animTime + idx / LOGOS.length) * 2 * Math.PI;
+//                     const radius = 200; // increased spacing
+//                     const x = center.x + radius * Math.cos(angle);
+//                     const y = center.y + radius * Math.sin(angle);
+//                     return (
+//                       <image
+//                         key={logo.src}
+//                         href={logo.src}
+//                         alt={logo.alt}
+//                         x={x - 48} // bigger size
+//                         y={y - 48}
+//                         width={96}
+//                         height={96}
+//                         className="rounded-full shadow-2xl"
+//                       />
+//                     );
+//                   })}
+
+//                   {/* Center Yarn Circle with Text */}
+//                   <circle
+//                     cx={center.x}
+//                     cy={center.y}
+//                     r={60}
+//                     fill="#2E8A10" // green color
+//                     stroke="#006400" // darker green border
+//                     strokeWidth={4}
+//                   />
+//                   <text
+//                     x={center.x}
+//                     y={center.y + 6}
+//                     textAnchor="middle"
+//                     fontSize="18"
+//                     fontWeight="bold"
+//                     fill="#fff"
+//                   >
+//                     Yarn
+//                   </text>
+//                 </svg>
+//               </div>
+//             </div>
+
+//             {/* RIGHT SIDE — Description */}
+//             <div
+//               className="w-full md:w-1/2 h-[450px] relative z-10 flex flex-col justify-center items-start p-4 text-white space-y-3 overflow-y-auto"
+//               style={{
+//                 backgroundImage: `url(${bgImageUrl})`,
+//                 backgroundRepeat: "no-repeat",
+//                 backgroundSize: "cover",
+//                 backgroundPosition: "center",
+//                 backgroundAttachment: "fixed",
+//               }}
+//             >
+//               <span className="text-blue-200 font-medium text-xs tracking-wide uppercase">
+//                 Yarn Collection
+//               </span>
+//               <div className="mt-2">
+//                 <h4 className="text-base font-semibold text-white mb-1 underline underline-offset-4">
+//                   Count Range
+//                 </h4>
+//                 <p className="text-xs drop-shadow">
+//                   RING SPUN NE 12 - NE 80<br />
+//                   OPEN END NE 2 - NE 30
+//                 </p>
+//               </div>
+//               <div className="mt-1">
+//                 <h4 className="text-base font-semibold text-white mb-1 underline underline-offset-4">
+//                   Variety
+//                 </h4>
+//                 <ul className="text-xs list-disc list-inside drop-shadow space-y-0.5">
+//                   <li>RING</li>
+//                   <li>COMPACT</li>
+//                   <li>SIRO COMPACT</li>
+//                   <li>VORTEX</li>
+//                   <li>OPEN END</li>
+//                   <li>SLUB</li>
+//                   <li>HIGH TWIST</li>
+//                   <li>TFO</li>
+//                 </ul>
+//               </div>
+//             </div>
+
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+
+
+
 import { useState, useEffect } from "react";
 
 const LOGOS = [
@@ -559,120 +889,83 @@ const LOGOS = [
 
 export default function YarnsSection() {
   const [animTime, setAnimTime] = useState(0);
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    if (!expanded) return;
     let frame;
     const animate = () => {
-      setAnimTime((prev) => (prev + 0.003) % 1); // slower rotation
+      setAnimTime((prev) => (prev + 0.0008) % 1);
       frame = requestAnimationFrame(animate);
     };
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
-  }, [expanded]);
+  }, []);
 
-  const center = { x: 200, y: 240 }; // SVG center
+  const center = { x: 200, y: 240 };
   const bgImageUrl = "/assets/yarnbg.png";
 
   return (
     <section className="relative w-full py-8 bg-white">
       <div className="px-[50px]">
-        {/* Title */}
-        {/* <div className="text-center mb-4 relative h-22 flex items-center justify-center">
-          <video
-            className="absolute inset-0 w-full h-full object-cover opacity-80"
-            src="https://www.shutterstock.com/shutterstock/videos/1107376703/preview/stock-footage-panoramic-cinematic-shot-cotton-thread-manufacturing-in-a-textile-oil-factory-organic-cotton-yarn.webm"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-          <h2
-            className="relative text-6xl md:text-4xl font-extrabold text-transparent bg-clip-text z-10"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgb(255, 255, 255), rgba(255,255,255,0.8))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            YARNS
-          </h2>
-        </div> */}
-
         <div className="text-center">
-          {/* <span className="text-green-600 font-semibold text-sm tracking-wider uppercase pt-10">
-            OUR COMMITMENT
-          </span> */}
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-4">
-            Yarns
+            YARNS
           </h2>
         </div>
 
-        {/* Content */}
         <div className="relative w-full max-w-[1600px] mx-auto overflow-hidden">
           <div className="relative w-full flex flex-col md:flex-row justify-between items-stretch gap-4 px-6 py-6">
             
-            {/* LEFT SIDE */}
+            {/* LEFT SIDE — Solar System Animation */}
             <div className="relative w-full md:w-1/2 min-w-[330px] h-[480px] bg-white flex items-center justify-center">
-              
-              {/* BEFORE CLICK — Rotating Yarn Image */}
-              {!expanded && (
-                <img
-                  src="/assets/yarn.png"
-                  alt="Yarn"
-                  onClick={() => setExpanded(true)}
-                  className="w-72 h-72 rounded-full cursor-pointer animate-spin-slow hover:scale-105 transition-transform duration-300"
-                />
-              )}
-
-              {/* AFTER CLICK — Solar System Animation */}
-              {expanded && (
-                <div className="relative w-full h-full">
-                  <svg
-                    viewBox="0 0 400 480"
-                    className="absolute left-0 top-0 w-full h-full select-none pointer-events-none"
+              <div className="relative w-full h-full">
+                <svg
+                  viewBox="0 0 400 480"
+                  className="absolute left-0 top-0 w-full h-full select-none pointer-events-none"
+                >
+                  {LOGOS.map((logo, idx) => {
+                    const angle =
+                      (animTime + idx / LOGOS.length) * 2 * Math.PI;
+                    const radius = 200;
+                    const x = center.x + radius * Math.cos(angle);
+                    const y = center.y + radius * Math.sin(angle);
+                    return (
+                      <image
+                        key={logo.src}
+                        href={logo.src}
+                        alt={logo.alt}
+                        x={x - 48}
+                        y={y - 48}
+                        width={96}
+                        height={96}
+                        className="rounded-full shadow-2xl"
+                      />
+                    );
+                  })}
+                  <circle
+                    cx={center.x}
+                    cy={center.y}
+                    r={60}
+                    fill="#2E8A10"
+                    stroke="#006400"
+                    strokeWidth={4}
+                  />
+                  <text
+                    x={center.x}
+                    y={center.y + 6}
+                    textAnchor="middle"
+                    fontSize="20"
+                    fontWeight="bold"
+                    fill="#fff"
                   >
-                    {LOGOS.map((logo, idx) => {
-                      const angle =
-                        (animTime + idx / LOGOS.length) * 2 * Math.PI;
-                      const radius = 100 + (idx % 3) * 30;
-                      const x = center.x + radius * Math.cos(angle);
-                      const y = center.y + radius * Math.sin(angle);
-                      return (
-                        <image
-                          key={logo.src}
-                          href={logo.src}
-                          alt={logo.alt}
-                          x={x - 32} // bigger size
-                          y={y - 32}
-                          width={64}
-                          height={64}
-                          className="rounded-full shadow-xl"
-                        />
-                      );
-                    })}
-
-                    {/* Center Yarn Image (Click to Collapse) */}
-                    <image
-                      href="/assets/yarn-circle.png"
-                      x={center.x - 50}
-                      y={center.y - 50}
-                      width={100}
-                      height={100}
-                      className="rounded-full cursor-pointer"
-                      onClick={() => setExpanded(false)}
-                      style={{ pointerEvents: "auto" }}
-                    />
-                  </svg>
-                </div>
-              )}
+                    Yarn
+                  </text>
+                </svg>
+              </div>
             </div>
 
-            {/* RIGHT SIDE */}
+            {/* RIGHT SIDE — Description, Variety (on right), Count Range (on left) */}
             <div
-              className="w-full md:w-1/2 h-[450px] relative z-10 flex flex-col justify-center items-start p-4 text-white space-y-3 overflow-y-auto"
+              className="w-full md:w-1/2 h-[450px] relative z-10 flex flex-col justify-center items-start p-4 space-y-6 overflow-y-auto"
               style={{
                 backgroundImage: `url(${bgImageUrl})`,
                 backgroundRepeat: "no-repeat",
@@ -681,32 +974,38 @@ export default function YarnsSection() {
                 backgroundAttachment: "fixed",
               }}
             >
-              <span className="text-blue-200 font-medium text-xs tracking-wide uppercase">
+              <span className="text-blue-300 font-semibold text-lg tracking-wide uppercase">
                 Yarn Collection
               </span>
-              <div className="mt-2">
-                <h4 className="text-base font-semibold text-white mb-1 underline underline-offset-4">
-                  Count Range
-                </h4>
-                <p className="text-xs drop-shadow">
-                  RING SPUN NE 12 - NE 80<br />
-                  OPEN END NE 2 - NE 30
-                </p>
-              </div>
-              <div className="mt-1">
-                <h4 className="text-base font-semibold text-white mb-1 underline underline-offset-4">
-                  Variety
-                </h4>
-                <ul className="text-xs list-disc list-inside drop-shadow space-y-0.5">
-                  <li>RING</li>
-                  <li>COMPACT</li>
-                  <li>SIRO COMPACT</li>
-                  <li>VORTEX</li>
-                  <li>OPEN END</li>
-                  <li>SLUB</li>
-                  <li>HIGH TWIST</li>
-                  <li>TFO</li>
-                </ul>
+              
+              {/* Side-by-side blocks: Count Range left, Variety right */}
+              <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
+                {/* Count Range - left */}
+                <div className="flex-1   rounded-xl px-6 py-4 shadow-lg">
+                  <h4 className="text-xl md:text-2xl font-bold text-green-100 mb-2 underline underline-offset-4">
+                    Count Range
+                  </h4>
+                  <p className="text-lg md:text-xl text-white  drop-shadow font-semibold">
+                    RING SPUN NE 12 - NE 80<br />
+                    OPEN END NE 2 - NE 30
+                  </p>
+                </div>
+                {/* Variety - right */}
+                <div className="flex-1   rounded-xl px-6 py-4 shadow-lg">
+                  <h4 className="text-xl md:text-2xl font-bold text-green-100 mb-2 underline underline-offset-4">
+                    Variety
+                  </h4>
+                  <ul className="text-lg md:text-xl text-white list-disc list-inside space-y-1 pl-2 font-semibold">
+                    <li>RING</li>
+                    <li>COMPACT</li>
+                    <li>SIRO COMPACT</li>
+                    <li>VORTEX</li>
+                    <li>OPEN END</li>
+                    <li>SLUB</li>
+                    <li>HIGH TWIST</li>
+                    <li>TFO</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -716,14 +1015,3 @@ export default function YarnsSection() {
     </section>
   );
 }
-
-/* Add to your CSS or Tailwind config */
-<style jsx global>{`
-  .animate-spin-slow {
-    animation: spin 12s linear infinite; /* slower spin */
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-`}</style>

@@ -129,17 +129,17 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { href: "#about", id: "about", label: "About" },
-    { href: "#yarns", id: "yarns", label: "Yarns" },
-    { href: "#products", id: "products", label: "Manufacturing" },
-    { href: "#sustainability", id: "sustainability", label: "Sustainability" },
-    { href: "#certifications", id: "certifications", label: "Certifications" },
-    { href: "#contact", id: "contact", label: "Contact" },
+    { href: "#about", id: "about", label: "ABOUT" },
+    { href: "#yarns", id: "yarns", label: "YARNS" },
+    { href: "#products", id: "products", label: "MANUFACTURING" },
+    { href: "#sustainability", id: "sustainability", label: "SUSTAINABILITY" },
+    { href: "#certifications", id: "certifications", label: "CERTIFICATES" },
+    { href: "#contact", id: "contact", label: "CONTACT" },
   ];
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-18 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-3">
