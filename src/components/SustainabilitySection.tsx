@@ -36,9 +36,11 @@ export default function SustainabilitySection() {
     <section id="sustainability" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mt-4">
             SUSTAINABILITY
           </h2>
+          <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-2"></div>
+
         </div>
 
         {/* Responsive Grid */}

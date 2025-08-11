@@ -92,7 +92,6 @@
 
 
 
-
 import { useEffect, useState } from "react";
 
 export default function Header() {
@@ -139,10 +138,14 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
-      <div className="container mx-auto px-18 py-4">
+      <div className="container mx-auto px-4 lg:px-18 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 md:ml-0 ml-1">
+            {/* 
+              - Reduced left margin on mobile (`ml-1`), no margin on md and up (`md:ml-0`).
+              - This shrinks left side space in mobile.
+            */}
             <img
               src="/assets/vts-logo.png"
               alt="Company Logo"
@@ -168,7 +171,10 @@ export default function Header() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden z-50">
+          <div className="lg:hidden z-50 ml-auto">
+            {/* 
+              - Added `ml-auto` to push hamburger button fully to the right side on mobile
+            */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"

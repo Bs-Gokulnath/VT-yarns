@@ -184,6 +184,7 @@
 
 
 
+
 import { useRef, useState, useEffect } from "react";
 
 // Count-up animation hook only starts when `start` is true
@@ -215,14 +216,24 @@ function useCountUp(end: number, start: boolean, duration = 2000) {
   return value;
 }
 
-function Stat({ label, value, color }: { label: string; value: number; color: string }) {
+function Stat({
+  label,
+  value,
+  color,
+  formatValue,
+}: {
+  label: string;
+  value: number;
+  color: string;
+  formatValue?: (val: number) => React.ReactNode;
+}) {
   return (
     <div className="flex flex-col items-center">
       <span
         className={`text-4xl font-extrabold ${color} tracking-wide`}
         style={{ minHeight: "56px" }}
       >
-        {value.toLocaleString()}
+        {formatValue ? formatValue(value) : value.toLocaleString()}
       </span>
       <span className="mt-2 text-gray-700 font-medium text-center">{label}</span>
     </div>
@@ -263,17 +274,26 @@ export default function AboutSection() {
   const warpers = useCountUp(4, isVisible, 1700);
   const power = useCountUp(8000000, isVisible, 2400); // "8 million units"
 
+  // Formatter for power stat to show "8 Million"
+  const formatPowerValue = (val: number) => {
+    if (val >= 1_000_000) {
+      return (val / 1_000_000).toFixed(0) + " Million";
+    }
+    return val.toLocaleString();
+  };
+
   return (
     <section
       ref={sectionRef}
       className="w-full bg-white flex flex-col md:flex-row items-stretch min-h-[600px] px-2 sm:px-4 lg:px-16"
     >
       {/* Mobile: About Us heading above image */}
-      <div className="block md:hidden w-full text-left mb-4">
+      <div className="block md:hidden w-full text-left mb-2">
         <h2
           className={`text-3xl font-extrabold text-gray-900 ${
             isVisible ? "animate-fade-in" : "opacity-0"
           }`}
+          style={{ marginTop: "0.5rem" }}
         >
           About
         </h2>
@@ -294,13 +314,14 @@ export default function AboutSection() {
       </div>
 
       {/* Right Side: About Content */}
-      <div className="md:w-1/2 w-full flex items-center bg-white">
-        <div className="w-full px-4 sm:px-6 md:px-8 py-6 md:py-12 max-w-3xl mx-auto">
+      <div className="md:w-1/2 w-full flex items-start bg-white">
+        <div className="w-full px-4 sm:px-6 md:px-8 py-2 md:py-6 max-w-3xl mx-auto">
           {/* Desktop: About Us heading here */}
           <h2
-            className={`hidden md:block text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 text-left ${
+            className={`hidden md:block text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 text-left ${
               isVisible ? "animate-fade-in" : "opacity-0"
             }`}
+            style={{ marginTop: "0.5rem" }}
           >
             About
           </h2>
@@ -329,34 +350,70 @@ export default function AboutSection() {
             The dynamic leadership team, dedicated workforce, and creative customers all play a pivotal role in the company's ongoing growth and success.
           </p>
 
-          {/* Stats (existing 3) */}
+          {/* DESKTOP 1st row of counters */}
           <div
-            className={`grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 pt-4 md:pt-8 max-w-xl mx-auto pb-4 md:pb-0 ${
+            className={`hidden md:grid grid-cols-3 gap-6 md:gap-8 pt-4 md:pt-8 max-w-xl mx-auto pb-4 md:pb-0 ${
               isVisible ? "animate-fade-in-delay3" : "opacity-0"
             }`}
           >
             <Stat label="Ring Spindles" value={ringSpindles} color="text-green-600" />
             <Stat label="Airjet Spinning Positions" value={airjetSpinning} color="text-green-600" />
-            <div className="col-span-2 md:col-span-1 flex justify-center">
+            <div className="flex justify-center">
               <Stat label="Tons per month" value={tonsPerMonth} color="text-green-600" />
             </div>
           </div>
 
-          {/* New row of 3 stats */}
+          {/* DESKTOP 2nd row of counters */}
           <div
-            className={`grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 pt-3 max-w-xl mx-auto ${
+            className={`hidden md:grid grid-cols-3 gap-6 md:gap-8 pt-3 max-w-xl mx-auto ${
               isVisible ? "animate-fade-in-delay3" : "opacity-0"
             }`}
           >
             <Stat label="Sizing Machines" value={sizing} color="text-green-600" />
             <Stat label="Direct Warpers" value={warpers} color="text-green-600" />
-            <div className="col-span-2 md:col-span-1 flex justify-center">
+            <div className="flex justify-center">
               <Stat
                 label="Power (Units / Year)"
                 value={power}
                 color="text-green-600"
+                formatValue={formatPowerValue}
               />
             </div>
+          </div>
+
+          {/* MOBILE 1st row: Ring Spindles & Airjet Spinning */}
+          <div
+            className={`grid grid-cols-2 gap-6 md:hidden pt-3 max-w-xl mx-auto ${
+              isVisible ? "animate-fade-in-delay3" : "opacity-0"
+            }`}
+          >
+            <Stat label="Ring Spindles" value={ringSpindles} color="text-green-600" />
+            <Stat label="Airjet Spinning Positions" value={airjetSpinning} color="text-green-600" />
+          </div>
+
+          {/* MOBILE 2nd row: Tons, Sizing, Warpers */}
+          <div
+            className={`grid grid-cols-3 gap-6 md:hidden pt-3 max-w-xl mx-auto ${
+              isVisible ? "animate-fade-in-delay3" : "opacity-0"
+            }`}
+          >
+            <Stat label="Tons per month" value={tonsPerMonth} color="text-green-600" />
+            <Stat label="Sizing Machines" value={sizing} color="text-green-600" />
+            <Stat label="Direct Warpers" value={warpers} color="text-green-600" />
+          </div>
+
+          {/* MOBILE 3rd row: Power stat full width */}
+          <div
+            className={`pt-3 max-w-xl mx-auto md:hidden ${
+              isVisible ? "animate-fade-in-delay3" : "opacity-0"
+            }`}
+          >
+            <Stat
+              label="Power (Units / Year)"
+              value={power}
+              color="text-green-600"
+              formatValue={formatPowerValue}
+            />
           </div>
         </div>
       </div>
