@@ -10,6 +10,11 @@
     box-sizing: border-box;
     font-family: 'Josefin Sans', sans-serif;
   }
+
+/* Smooth scrolling for navigation */
+html {
+  scroll-behavior: smooth;
+}
   
 /* Change highlight selection color for all elements */
 ::selection {

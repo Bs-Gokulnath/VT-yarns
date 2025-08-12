@@ -1,111 +1,17 @@
-// import { useState } from "react";
-
-// export default function Header() {
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-//   return (
-//     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
-//       <div className="container mx-auto px-6 py-4">
-//         <div className="flex items-center justify-between">
-//           {/* Logo */}
-//           <div className="flex items-center space-x-3">
-//             <img
-//               src="/assets/vts-logo.png"
-//               alt="Company Logo"
-//               className="w-40 h-12 object-contain"
-//             />
-//           </div>
-
-//           {/* Desktop Nav */}
-//           <nav className="hidden lg:flex items-center">
-//             {[
-//               { href: "#home", label: "About" },
-//               { href: "#about", label: "Yarns" },
-//               { href: "#products", label: "Manufacturing" },
-//               { href: "#services", label: "Sustainability" },
-//               { href: "#news", label: "Certifications" },
-//               { href: "#contact", label: "Contact" },
-//             ].map((link, i) => (
-//               <a
-//                 key={i}
-//                 href={link.href}
-//                 className="text-gray-700 hover:text-green-500 transition duration-300 font-medium mr-8 last:mr-0"
-//               >
-//                 {link.label}
-//               </a>
-//             ))}
-//           </nav>
-
-//           {/* Mobile Menu Button */}
-//           <div className="lg:hidden z-50">
-//             <button
-//               onClick={() => setIsMenuOpen(!isMenuOpen)}
-//               aria-label="Toggle menu"
-//               className="text-gray-800 hover:text-green-600 transition-colors focus:outline-none"
-//             >
-//               {/* SVG Hamburger Icon */}
-//               <svg
-//                 className="w-8 h-8"
-//                 fill="none"
-//                 stroke="currentColor"
-//                 viewBox="0 0 24 24"
-//                 xmlns="http://www.w3.org/2000/svg"
-//               >
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth={2}
-//                   d="M4 6h16M4 12h16M4 18h16"
-//                 />
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Mobile Dropdown */}
-//         {isMenuOpen && (
-//           <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
-//             <nav className="flex flex-col pt-4">
-//               {[
-//                 { href: "#home", label: "About" },
-//                 { href: "#about", label: "Yarns" },
-//                 { href: "#products", label: "Manufacturing" },
-//                 { href: "#services", label: "Sustainability" },
-//                 { href: "#news", label: "Certifications" },
-//                 { href: "#contact", label: "Contact" },
-//               ].map((link, i) => (
-//                 <a
-//                   key={i}
-//                   href={link.href}
-//                   className="text-gray-700 hover:text-green-500 transition duration-300 font-medium mb-6 last:mb-0"
-//                 >
-//                   {link.label}
-//                 </a>
-//               ))}
-//             </nav>
-//           </div>
-//         )}
-//       </div>
-//     </header>
-//   );
-// }
-
-
-
 import { useEffect, useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
-  // Update active section on scroll
+  // Scroll listener for active section
   useEffect(() => {
     const sections = [
       "about",
       "yarns",
-      "products",
+      "manufacturing",
       "sustainability",
-      "certifications",
+      "certificates",
       "contact",
     ];
     const handleScroll = () => {
@@ -123,33 +29,34 @@ export default function Header() {
       setActiveSection(current);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
     { href: "#about", id: "about", label: "ABOUT" },
     { href: "#yarns", id: "yarns", label: "YARNS" },
-    { href: "#products", id: "products", label: "MANUFACTURING" },
+    { href: "#manufacturing", id: "manufacturing", label: "MANUFACTURING" },
     { href: "#sustainability", id: "sustainability", label: "SUSTAINABILITY" },
-    { href: "#certifications", id: "certifications", label: "CERTIFICATES" },
+    { href: "#certificates", id: "certificates", label: "CERTIFICATES" },
     { href: "#contact", id: "contact", label: "CONTACT" },
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
+    <header className="fixed top-0 left-0 right-0 bg-white backdrop-blur-sm z-50">
       <div className="container mx-auto px-4 lg:px-18 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-3 md:ml-0 ml-1">
-            {/* 
-              - Reduced left margin on mobile (`ml-1`), no margin on md and up (`md:ml-0`).
-              - This shrinks left side space in mobile.
-            */}
-            <img
-              src="/assets/vts-logo.png"
-              alt="Company Logo"
-              className="w-40 h-12 object-contain"
+          {/* ✅ Video always visible for both desktop & mobile */}
+          <div className="flex items-center space-x-3">
+            <video
+              src="/assets/VTS logo2.mp4" // make sure file name has no spaces
+              autoPlay
+              loop
+              muted={true}
+              playsInline
+              preload="auto"
+              className="w-40 h-12 object-cover"
+              style={{ borderRadius: "0px" }}
             />
           </div>
 
@@ -172,9 +79,6 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden z-50 ml-auto">
-            {/* 
-              - Added `ml-auto` to push hamburger button fully to the right side on mobile
-            */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"

@@ -1,6 +1,18 @@
 export default function Footer() {
+  // Smooth scroll function for footer navigation
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
-    <footer className="bg-transparent pt-10 pb-10">
+    <footer id="contact" className="bg-transparent pt-10 pb-10">
       {/* Boxed green footer area */}
       <div className="bg-green-900 mx-auto max-w-360 px-4 md:px-12 pt-10 pb-0 mb-2">
         {/* Brochure Banner Row */}
@@ -42,12 +54,12 @@ export default function Footer() {
             <div>
               <h4 className="text-lg font-semibold mb-4 text-white">Company</h4>
               <ul className="space-y-3">
-                <li><a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">About</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">Yarns</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">Manufacturing</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">Sustainability</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">Certifications</a></li>
-                <li><a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">Contact Us</a></li>
+                <li><a href="#about" onClick={(e) => handleSmoothScroll(e, 'about')} className="text-green-200 hover:text-white transition-colors cursor-pointer">About</a></li>
+                <li><a href="#yarns" onClick={(e) => handleSmoothScroll(e, 'yarns')} className="text-green-200 hover:text-white transition-colors cursor-pointer">Yarns</a></li>
+                <li><a href="#manufacturing" onClick={(e) => handleSmoothScroll(e, 'manufacturing')} className="text-green-200 hover:text-white transition-colors cursor-pointer">Manufacturing</a></li>
+                <li><a href="#sustainability" onClick={(e) => handleSmoothScroll(e, 'sustainability')} className="text-green-200 hover:text-white transition-colors cursor-pointer">Sustainability</a></li>
+                <li><a href="#certificates" onClick={(e) => handleSmoothScroll(e, 'certificates')} className="text-green-200 hover:text-white transition-colors cursor-pointer">Certifications</a></li>
+                <li><a href="#contact" onClick={(e) => handleSmoothScroll(e, 'contact')} className="text-green-200 hover:text-white transition-colors cursor-pointer">Contact Us</a></li>
               </ul>
             </div>
 
@@ -81,8 +93,18 @@ export default function Footer() {
               <h4 className="text-lg font-semibold mb-4 text-white">Inquiries</h4>
               <ul className="space-y-3">
                 <li>
-                  <a href="#" className="text-green-200 hover:text-white transition-colors cursor-pointer">
+                  <a href="#contact" onClick={(e) => handleSmoothScroll(e, 'contact')} className="text-green-200 hover:text-white transition-colors cursor-pointer">
                     Fill an inquiry form
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:sales@vtsyarns.com" className="text-green-200 hover:text-white transition-colors cursor-pointer">
+                    Email us directly
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+914242220094" className="text-green-200 hover:text-white transition-colors cursor-pointer">
+                    Call us now
                   </a>
                 </li>
               </ul>
@@ -98,12 +120,16 @@ export default function Footer() {
               <a href="#" className="hover:text-white transition-colors cursor-pointer">
                 Privacy Policy
               </a>
+              <p> | </p>
               <a href="#" className="hover:text-white transition-colors cursor-pointer">
                 Terms of Service
               </a>
+              <p> | </p>
+
               <a href="#" className="hover:text-white transition-colors cursor-pointer">
                 Cookie Policy
               </a>
+
             </div>
           </div>
         </div>

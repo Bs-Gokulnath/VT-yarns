@@ -484,7 +484,7 @@ const MANUFACTURING_IMAGES = [
 
 export default function ManufacturingSection() {
   const [isMobile, setIsMobile] = useState(false);
-  const [hoverIndex, setHoverIndex] = useState(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -497,9 +497,9 @@ export default function ManufacturingSection() {
 
   return (
     <section
-      id="products"
-      className="w-full bg-white py-12 flex flex-col items-center"
-      style={{ overflowX: "hidden" }}
+      id="manufacturing"
+      className="w-full bg-white py-12 flex flex-col items-center scroll-mt-24"
+      style={{ overflowX: "hidden", scrollMarginTop: '100px' }}
     >
       {/* Title */}
       <div className="text-center mb-12 px-4">

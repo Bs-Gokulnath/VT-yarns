@@ -127,10 +127,18 @@ import { useEffect, useState } from "react";
 
 export default function HeroSection() {
   const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100);
-    return () => clearTimeout(timer);
+    // First, wait for the header to be fully rendered and stable
+    const headerTimer = setTimeout(() => {
+      setIsLoading(false);
+      // Then trigger the hero animation after header is ready
+      const heroTimer = setTimeout(() => setVisible(true), 200);
+      return () => clearTimeout(heroTimer);
+    }, 800); // Wait 800ms for header to be fully rendered
+
+    return () => clearTimeout(headerTimer);
   }, []);
 
   return (
@@ -153,16 +161,27 @@ export default function HeroSection() {
         {/* Overlay */}
         <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div>
 
-        {/* Content */}
-        <div
-          className={`relative px-6 text-center text-white z-10 w-full max-w-4xl mx-auto transition-opacity duration-1500 ease-in-out ${
-            visible ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Spinning <span className="block">Sustainable Future</span>
-          </h1>
-        </div>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="relative z-20 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
+          </div>
+        )}
+
+        {/* Content - Only show after loading and with fade-in animation */}
+        {!isLoading && (
+          <div
+            className={`relative px-6 text-center text-white z-10 w-full max-w-4xl mx-auto transition-all duration-1500 ease-in-out ${
+              visible 
+                ? "opacity-100 transform translate-y-0" 
+                : "opacity-0 transform translate-y-8"
+            }`}
+          >
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              Spinning <span className="block">Sustainable Future</span>
+            </h1>
+          </div>
+        )}
 
         {/* Bottom Equal Curve */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
