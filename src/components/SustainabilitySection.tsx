@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 // type Commitment = {
 //   icon?: string;
 //   title?: string;
@@ -216,6 +218,9 @@ type Commitment = {
 };
 
 export default function SustainabilitySection() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
   const commitments: Commitment[] = [
     {
       videoSrc: "/assets/liva-infographic.mp4",
@@ -240,10 +245,42 @@ export default function SustainabilitySection() {
     },
   ];
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <section id="sustainability" className="py-20 bg-white">
+    <section 
+      ref={sectionRef}
+      id="sustainability" 
+      className="py-20 bg-white"
+    >
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div 
+          className={`text-center mb-12 transition-all duration-1000 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
           <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mt-4">
             SUSTAINABILITY
           </h2>
@@ -251,7 +288,11 @@ export default function SustainabilitySection() {
         </div>
 
         {/* Responsive Grid */}
-        <div className="grid grid-cols-12 gap-4 md:gap-6">
+        <div 
+          className={`grid grid-cols-12 gap-4 md:gap-6 transition-all duration-1000 ease-out delay-300 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
           {commitments.map((item, index) => {
             let colSpanMobile = "col-span-12";
             if (index === 1 || index === 2) colSpanMobile = "col-span-6";
@@ -265,9 +306,11 @@ export default function SustainabilitySection() {
             return (
               <div
                 key={index}
-                className={`group relative h-[330px] md:h-[400px] overflow-hidden shadow-lg cursor-pointer 
-                  ${item.isWide ? "col-span-12 md:col-span-6" : "md:col-span-3"} 
-                  ${colSpanMobile} ${orderClass}`}
+                className={`group relative h-[330px] md:h-[400px] overflow-hidden shadow-lg cursor-pointer transition-all duration-700 ease-out delay-${index * 200} ${
+                  item.isWide ? "col-span-12 md:col-span-6" : "md:col-span-3"
+                } ${colSpanMobile} ${orderClass} ${
+                  isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                }`}
               >
                 <video
                   className="absolute top-0 left-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 brightness-100"
