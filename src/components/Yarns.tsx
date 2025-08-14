@@ -705,7 +705,7 @@ export default function YarnsSection() {
               : "opacity-0 transform translate-y-8"
           }`}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-4 mb-2">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
             YARNS
           </h2>
           <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-6"></div>

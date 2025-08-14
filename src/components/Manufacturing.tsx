@@ -184,7 +184,7 @@ export default function ManufacturingSection() {
                           }}
                         />
                       </div>
-                      <div className="w-36 h-16 flex items-center justify-center font-bold text-gray-800 text-center select-none text-xl">
+                      <div className="w-36 h-16 flex items-center justify-center font-bold text-gray-800 text-center select-none text-xl mt-10">
                         {item.alt}
                       </div>
                     </>

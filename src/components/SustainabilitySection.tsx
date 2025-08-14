@@ -273,7 +273,7 @@ export default function SustainabilitySection() {
     <section 
       ref={sectionRef}
       id="sustainability" 
-      className="py-20 bg-white"
+      className="py-24 bg-white"
     >
       <div className="container mx-auto px-4">
         <div 
