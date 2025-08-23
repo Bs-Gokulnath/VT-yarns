@@ -11,7 +11,7 @@ export default function Header() {
       "yarns",
       "manufacturing",
       "sustainability",
-      "certificates",
+      "certifications",
       "contact",
     ];
     const handleScroll = () => {
@@ -36,9 +36,9 @@ export default function Header() {
   const navLinks = [
     { href: "#about", id: "about", label: "ABOUT" },
     { href: "#yarns", id: "yarns", label: "YARNS" },
+    { href: "#certificates", id: "certificates", label: "CERTIFICATIONS" },
     { href: "#manufacturing", id: "manufacturing", label: "MANUFACTURING" },
     { href: "#sustainability", id: "sustainability", label: "SUSTAINABILITY" },
-    { href: "#certificates", id: "certificates", label: "CERTIFICATES" },
     { href: "#contact", id: "contact", label: "CONTACT" },
   ];
 

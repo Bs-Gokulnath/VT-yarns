@@ -138,7 +138,7 @@ export default function AboutSection() {
             }`}
             style={{ marginTop: "0.5rem" }}
           >
-            About
+            ABOUT
           </h2>
 
           <p
@@ -148,15 +148,7 @@ export default function AboutSection() {
           >
             VTS is a third-generation family company with a legacy of over half a century in the textile industry.
           </p>
-          <p
-            className={`text-gray-700 mb-3 text-left max-w-xl ${
-              isVisible ? "animate-fade-in-delay2" : "opacity-0"
-            }`}
-          >
-            The company also has a weaving preparatory division with
-            <span className="font-semibold text-green-700"> 2 sizing</span> and
-            <span className="font-semibold text-green-700"> 4 direct warping machines</span>.
-          </p>
+         
           <p
             className={`text-gray-600 text-base mb-6 text-left max-w-xl ${
               isVisible ? "animate-fade-in-delay3" : "opacity-0"
