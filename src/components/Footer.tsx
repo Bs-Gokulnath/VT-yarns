@@ -223,7 +223,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a
-                href="#"
+                href="https://www.crivo.in"
                 className="hover:text-white transition-colors cursor-pointer"
               >
                 Developed by Crivo

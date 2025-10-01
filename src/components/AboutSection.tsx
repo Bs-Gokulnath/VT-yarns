@@ -110,14 +110,14 @@ export default function AboutSection() {
           }`}
           style={{ marginTop: "0.5rem" }}
         >
-          About
+          ABOUT
         </h2>
       </div>
 
       {/* Left Side: Image */}
       <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center">
         <img
-          src="/public/assets/sample1.png"
+          src="https://vts.crivo.in/sample1.png"
           alt="Factory workers"
           className="
             object-cover rounded-none md:rounded-l-2xl

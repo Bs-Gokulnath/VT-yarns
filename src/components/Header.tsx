@@ -51,7 +51,6 @@ export default function Header() {
             <video
               src="/assets/vts logo animation.mp4" // make sure file name has no spaces
               autoPlay
-              loop
               muted={true}
               playsInline
               preload="auto"

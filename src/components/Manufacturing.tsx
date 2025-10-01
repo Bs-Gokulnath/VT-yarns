@@ -1,4 +1,97 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
+
+// Custom CSS for hiding scrollbars
+const scrollbarHideCSS = `
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+`;
+
+// Manufacturing specifications for each process
+const MANUFACTURING_SPECS = {
+  "BLOW ROOM": {
+    // manufacturer: "TRUTZSCHLER",
+    specs: [
+      "TRUTZSCHLER",
+      "BALE OPENER - BO A 2300",
+      "MULTI MIXER - MPM-8",
+      "CLEANOMAT - CL C1 1600",
+      "PRE CLEANER - BOE 1200",
+      "",
+      "LMW",
+      "UNIMIX - LB7/4R",
+      "FLEXI CLEAN - LB5/6"
+    ]
+  },
+  "CARDING": {
+    // manufacturer: "TRUTZSCHLER",
+    specs: [
+      "TRUTZSCHLER - TC-10",
+      "LMW - LC 636S CDS",
+    ]
+  },
+  "DRAWING": {
+    // manufacturer: "TRUTZSCHLER", 
+    specs: [
+      "LMW",
+      "BREAKER DRAWING  - LDB 3",
+      "FINISHER DRAWING - LDF3S",
+
+    ]
+  },
+  "RING SPINNING": {
+    // manufacturer: "TRUTZSCHLER",
+    specs: [
+      "LMW",
+      "SIMPLEX - 4280 A",
+      "RING FRAME - LR9AX",
+      "COMPACT - LR9AX-SPINPACT",
+      "SIRO COMPACT - LRJ9SX",
+
+    ]
+  },
+  "AUTO CONER": {
+    // manufacturer: "MURATEC",
+    specs: [
+      "MURATEC",
+      "AUTO CONER - QPRO EX",
+      "LENGTH & COUNT CONTROL - PLC21",
+      "CONTAMINATION & HARINESS CONTROL - ZENITH PLUS",
+
+    ]
+  },
+  "VORTEX": {
+    // manufacturer: "MURATEC",
+    specs: [
+      "VORTEX 870 - 240 SPINDLESMURATEC",
+      "VORTEX - 870EX",
+    ]
+  },
+  "WARPING": {
+    // manufacturer: "BENNINGER",
+    specs: [
+      "BENNINGER",
+      "768 CREEL - 1800MM - BENDIRECT",
+      "PRASHANT WEST POINT",
+      "912 CREEL - 2200MM - MPB 1000",
+
+    ]
+  },
+  "SIZING": {
+    // manufacturer: "BENNINGER",
+    specs: [
+      "BENNINGER",
+      "24 BEAMS - 2800MM - BENSIZE TEC",
+      "PRASANTH WEST POINT",
+      "24 BEAMS - 3600MM - PACESETTER-A",
+
+    ]
+  }
+};
 
 // Organized manufacturing data with multiple images per category
 const MANUFACTURING_DATA = {
@@ -61,14 +154,18 @@ const MANUFACTURING_IMAGES = Object.entries(MANUFACTURING_DATA).map(([category, 
   category: category,
 }));
 
+interface ManufacturingImage {
+  src: string;
+  alt: string;
+}
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  images: { src: string; alt: string }[];
-  category: string;
+  images: ManufacturingImage[];
 }
 
-function ImageModal({ isOpen, onClose, images, category }: ModalProps) {
+function ImageModal({ isOpen, onClose, images }: ModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -142,7 +239,7 @@ function ImageModal({ isOpen, onClose, images, category }: ModalProps) {
 
         {/* Image container */}
         <div 
-          className="relative h-96 md:h-[500px] bg-gray-100"
+          className="relative h-96 md:h-[500px] bg-white"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -204,16 +301,28 @@ function ImageModal({ isOpen, onClose, images, category }: ModalProps) {
   );
 }
 
-export default function ManufacturingSection() {
-  const [isMobile, setIsMobile] = useState(false);
+export default function Manufacturing() {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [modalState, setModalState] = useState({
     isOpen: false,
     images: [] as { src: string; alt: string }[],
     category: "",
   });
   const sectionRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const displayedImages = MANUFACTURING_IMAGES;
+
+  // Inject custom CSS for hiding scrollbars
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = scrollbarHideCSS;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   const openModal = (category: string) => {
     const images = MANUFACTURING_DATA[category as keyof typeof MANUFACTURING_DATA] || [];
@@ -232,12 +341,31 @@ export default function ManufacturingSection() {
     });
   };
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+  const scrollToImage = useCallback((index: number) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const imageWidth = 800 + 32; // 800px width + 32px gap
+      const scrollPosition = index * imageWidth;
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
   }, []);
+
+  const nextImage = useCallback(() => {
+    const nextIndex = (currentImageIndex + 1) % displayedImages.length;
+    setCurrentImageIndex(nextIndex);
+    scrollToImage(nextIndex);
+  }, [currentImageIndex, displayedImages.length, scrollToImage]);
+
+  const prevImage = useCallback(() => {
+    const prevIndex = currentImageIndex === 0 ? displayedImages.length - 1 : currentImageIndex - 1;
+    setCurrentImageIndex(prevIndex);
+    scrollToImage(prevIndex);
+  }, [currentImageIndex, displayedImages.length, scrollToImage]);
+
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -264,13 +392,45 @@ export default function ManufacturingSection() {
     };
   }, []);
 
-  const displayedImages = MANUFACTURING_IMAGES;
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevImage();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nextImage, prevImage]);
+
+  // Track scroll position to update current image index
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const imageWidth = 800 + 32; // 800px width + 32px gap
+      const scrollPosition = container.scrollLeft;
+      const newIndex = Math.round(scrollPosition / imageWidth);
+      if (newIndex !== currentImageIndex && newIndex >= 0 && newIndex < displayedImages.length) {
+        setCurrentImageIndex(newIndex);
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [currentImageIndex, displayedImages.length]);
 
   return (
     <section
       ref={sectionRef}
       id="manufacturing"
-      className="w-full bg-white py-12 flex flex-col items-center scroll-mt-24"
+      className="w-full bg-white py-12 flex flex-col items-center scroll-mt-20"
       style={{ overflowX: "hidden", scrollMarginTop: '100px' }}
     >
       {/* Title */}
@@ -285,133 +445,117 @@ export default function ManufacturingSection() {
         <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-2"></div>
       </div>
 
-      {/* Layout */}
+      {/* Horizontal Scrolling Layout */}
       <div 
-        className={`w-full flex justify-center px-2 sm:px-4 md:px-0 transition-all duration-1000 ease-out delay-300 ${
+        className={`w-full overflow-hidden transition-all duration-1000 ease-out delay-300 relative ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        {isMobile ? (
-          // MOBILE: grid with 2 images per row, same size
-          <div className="grid grid-cols-2 gap-4">
-            {displayedImages.map((item, idx) => {
-              const isHovered = hoverIndex === idx;
+        {/* Navigation Arrows */}
+        <button
+          onClick={prevImage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 shadow-lg hover:scale-110"
+          aria-label="Previous image"
+        >
+          ←
+        </button>
+        <button
+          onClick={nextImage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 shadow-lg hover:scale-110"
+          aria-label="Next image"
+        >
+          →
+        </button>
 
-              return (
-                <div
-                  key={idx}
-                  className={`flex flex-col items-center transition-all duration-700 ease-out delay-${idx * 100} ${
-                    isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                  }`}
-                  onMouseEnter={() => setHoverIndex(idx)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                >
-                  <div className="w-full aspect-square overflow-hidden max-w-[150px]">
-                    <img
-                      src={item.src}
-                      alt={item.alt}
-                      draggable={false}
-                      onError={(e) => (e.currentTarget.style.display = "none")}
-                      onClick={() => openModal(item.category)}
-                      className="w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
-                      style={{
-                        transformOrigin: "center bottom",
-                        transition: "transform 0.5s ease",
-                        transform: isHovered
-                          ? "scale(1.5) translateY(-10px)"
-                          : "scale(1)",
-                        position: isHovered ? "relative" : "static",
-                        zIndex: isHovered ? 50 : 0,
-                      }}
-                    />
+        {/* Scrollable Container */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto scrollbar-hide gap-8 pb-4" 
+          style={{ 
+            scrollSnapType: 'x mandatory',
+            paddingLeft: 'clamp(64px, 15vw, 320px)',
+            paddingRight: 'clamp(64px, 15vw, 320px)'
+          }}
+        >
+          {displayedImages.map((item, idx) => {
+            const specs = MANUFACTURING_SPECS[item.category as keyof typeof MANUFACTURING_SPECS];
+            const isHovered = hoverIndex === idx;
+            
+            return (
+              <div
+                key={idx}
+                className={`relative flex-shrink-0 shadow-2xl overflow-hidden cursor-pointer transition-all duration-700 ease-out group ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                onClick={() => openModal(item.category)}
+                onMouseEnter={() => setHoverIndex(idx)}
+                onMouseLeave={() => setHoverIndex(null)}
+                style={{
+                  width: '800px',
+                  height: '500px',
+                  scrollSnapAlign: 'start'
+                }}
+              >
+                {/* Full Background Image */}
+                <div className="absolute inset-0">
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    draggable={false}
+                  />
+                </div>
+                
+                {/* Dark Overlay for better text visibility on hover */}
+                <div className={`absolute inset-0 bg-black transition-opacity duration-500 ${
+                  isHovered ? 'opacity-60' : 'opacity-20'
+                }`}></div>
+                
+                {/* Content Overlay - Only visible on hover */}
+                <div className={`absolute inset-0 p-8 flex flex-col justify-between transition-all duration-500 ${
+                  isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}>
+                  {/* Title Section */}
+                  <div>
+                    <h3 className="text-4xl font-bold text-white mb-4 tracking-wide drop-shadow-lg">
+                      {item.category}
+                    </h3>
+                    <div className="w-16 h-1 bg-green-400 rounded mb-6"></div>
+                    
+                    {/* First spec as manufacturer/title */}
+                    <div className="mb-4">
+                      <span className="text-lg font-semibold text-green-300 uppercase tracking-wider drop-shadow">
+                        {specs.specs[0]}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-2 text-center font-bold text-gray-800 text-sm sm:text-base">
-                    {item.alt}
+                  
+                  {/* Specifications */}
+                  <div className="space-y-2">
+                    {specs.specs.slice(1, 6).map((spec, specIdx) => (
+                      <div key={specIdx}>
+                        {spec && (
+                          <div className="flex items-start">
+                            {/* <span className="text-green-400 mr-3 text-sm mt-1 drop-shadow">▸</span> */}
+                            <span className="text-white font-medium text-base drop-shadow">{spec}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Click indicator */}
+                  <div className="text-center">
+                    <div className="inline-block text-sm text-green-300 bg-black bg-opacity-50 px-4 py-2 rounded-full drop-shadow">
+                      Gallery →
+                    </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          // DESKTOP: original alternating layout
-          <div className="flex relative flex-row">
-            {displayedImages.map((item, idx) => {
-              const isHovered = hoverIndex === idx;
-              return (
-                <div
-                  key={idx}
-                  className={`flex flex-col items-center transition-all duration-700 ease-out delay-${idx * 100} ${
-                    isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                  }`}
-                  style={{
-                    overflow: "visible",
-                    position: "relative",
-                    zIndex: isHovered ? 50 : 0,
-                    transition: "z-index 0.3s ease",
-                  }}
-                  onMouseEnter={() => setHoverIndex(idx)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                >
-                  {idx % 2 === 0 ? (
-                    <>
-                      <div className="w-36 h-36 flex items-center justify-center font-bold text-gray-800 text-center select-none text-xl">
-                        {item.alt}
-                      </div>
-                      <div className="w-36 h-36 overflow-visible">
-                        <img
-                          src={item.src}
-                          alt={item.alt}
-                          draggable={false}
-                          onError={(e) =>
-                            (e.currentTarget.style.display = "none")
-                          }
-                          onClick={() => openModal(item.category)}
-                          className="w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
-                          style={{
-                            transformOrigin: "center bottom",
-                            transition: "transform 0.5s ease",
-                            transform: isHovered
-                              ? "scale(1.8) translateY(-20px)"
-                              : "scale(1)",
-                            position: isHovered ? "relative" : "static",
-                            zIndex: isHovered ? 50 : 0,
-                          }}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-36 h-36 overflow-visible">
-                        <img
-                          src={item.src}
-                          alt={item.alt}
-                          draggable={false}
-                          onError={(e) =>
-                            (e.currentTarget.style.display = "none")
-                          }
-                          onClick={() => openModal(item.category)}
-                          className="w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
-                          style={{
-                            transformOrigin: "center bottom",
-                            transition: "transform 0.5s ease",
-                            transform: isHovered
-                              ? "scale(1.8) translateY(-20px)"
-                              : "scale(1)",
-                            position: isHovered ? "relative" : "static",
-                            zIndex: isHovered ? 50 : 0,
-                          }}
-                        />
-                      </div>
-                      <div className="w-36 h-16 flex items-center justify-center font-bold text-gray-800 text-center select-none text-xl mt-10">
-                        {item.alt}
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+              </div>
+            );
+          })}
+        </div>
+        
       </div>
 
       {/* Image Modal */}
@@ -419,7 +563,6 @@ export default function ManufacturingSection() {
         isOpen={modalState.isOpen}
         onClose={closeModal}
         images={modalState.images}
-        category={modalState.category}
       />
     </section>
   );

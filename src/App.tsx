@@ -8,7 +8,7 @@ import YarnAndCertificateCombined from './components/YarnAndCertificateCombined'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white w-full max-w-full overflow-x-hidden" style={{ backgroundColor: '#ffffff' }}>
       <Header />
       <HeroSection />
       <AboutSection />
