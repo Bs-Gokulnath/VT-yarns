@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const LOGOS = [
   { src: "/assets/viscose.png", alt: "Viscose" },
@@ -20,258 +20,112 @@ const CERT_LOGOS = [
   "/assets/cert5.png",
 ];
 
-const CERT_PDF_MAP = {
+const CERT_PDF_MAP: Record<string, string> = {
   "/assets/cert1.png": "/assets/OEKO_Certificate.pdf",
   "/assets/cert4.png": "/assets/CONTROLUNION_Certificate.pdf",
   "/assets/cert5.png": "/assets/CONTROLUNION_Certificate.pdf",
 };
 
+type Preview = { type: "image" | "pdf"; url: string } | null;
+
 export default function YarnAndCertificateCombined() {
-  const titleRef = useRef(null);
-  const yarnSectionCenterRef = useRef(null);
-  const travelingYarnRef = useRef(null);
-  const certSectionYarnRef = useRef(null);
-  const yarnSectionRef = useRef(null);
-  const certSectionRef = useRef(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const yarnSectionCenterRef = useRef<HTMLDivElement>(null);
+  const certSectionYarnRef = useRef<HTMLImageElement>(null);
+  const yarnSectionRef = useRef<HTMLElement>(null);
+  const certSectionRef = useRef<HTMLElement>(null);
 
-  const [animationProgress, setAnimationProgress] = useState(0);
-  const [travelProgress, setTravelProgress] = useState(0);
-  const [showCircleLogos, setShowCircleLogos] = useState(false);
-  const [showCertLogos, setShowCertLogos] = useState(false);
-  const [visibleCertLogos, setVisibleCertLogos] = useState([]);
+  // Animation state for logos
+  const [visibleLogos, setVisibleLogos] = useState<number[]>([]);
+  const [showCenterYarn, setShowCenterYarn] = useState(false);
 
-  // Certificate preview state (inline, like your original)
+  // Certificate preview state
   const [isCombined, setIsCombined] = useState(false);
-  const [activeThumb, setActiveThumb] = useState(null);
-  const [activePreview, setActivePreview] = useState(null);
+  const [activePreview, setActivePreview] = useState<Preview>(null);
 
-  // Utils
-  const clamp = (min, v, max) => Math.max(min, Math.min(max, v));
-  const interpolate = (start, end, t) => start + (end - start) * t;
 
-  function getElementCenter(el) {
-    if (!el) return null;
-    const rect = el.getBoundingClientRect();
-    return {
-      x: rect.left + rect.width / 2 + window.scrollX,
-      y: rect.top + rect.height / 2 + window.scrollY,
-      width: rect.width,
-      height: rect.height,
-    };
-  }
 
-  // Geometry for yarn & logos
-  const yarnSectionCenterX = 260,
-    yarnSectionCenterY = 240,
-    yarnRadius = 180,
-    logoSize = 78;
+  // Geometry for yarn & logos - 5+4 layout (5 in first row, 4 centered in second row)
+  const logoSize = 170;
+  const gridSpacing = 190;
+  const gridStartX = 150;
+  const gridStartY = 150;
 
-  function generateLogoPositions(cx, cy, r, count) {
+  function generateGridPositions() {
     const positions = [];
-    for (let i = 0; i < count; i++) {
-      const angle = (2 * Math.PI * i) / count;
-      positions.push({
-        x: cx + r * Math.cos(angle),
-        y: cy + r * Math.sin(angle),
-      });
-    }
-    return positions;
-  }
-
-  const yarnLogoPositions = generateLogoPositions(
-    yarnSectionCenterX,
-    yarnSectionCenterY,
-    yarnRadius,
-    LOGOS.length
-  );
-
-  // Geometry for certificates - semi-circle arrangement
-  const certContainerW = 800,
-    certContainerH = 450,
-    certCenterX = certContainerW / 2,
-    yarnBaseY = 50,
-    certRadius = 250,
-    certSize = 140;
-
-  // Semi-circle positions for 5 certificates (downward arc)
-  const generateSemiCirclePositions = () => {
-    const positions = [];
-    const totalCerts = 5;
-    // Create a downward semi-circle with more spacing
-    // Adjust angles to create wider arc for more spacing
-    const startAngle = Math.PI - Math.PI/6;  // 150 degrees (slightly inward from left)
-    const endAngle = Math.PI/6;              // 30 degrees (slightly inward from right)
-    const angleRange = startAngle - endAngle;
-    const angleStep = -angleRange / (totalCerts - 1);
     
-    for (let i = 0; i < totalCerts; i++) {
-      const angle = startAngle + (angleStep * i);
+    // First row: 5 logos
+    for (let col = 0; col < 5; col++) {
       positions.push({
-        left: certCenterX + certRadius * Math.cos(angle) - certSize / 2,
-        top: yarnBaseY + 120 + certRadius * Math.sin(angle) - certSize / 2,
+        x: gridStartX + col * gridSpacing,
+        y: gridStartY,
       });
     }
+    
+    // Second row: 4 logos centered relative to first row
+    const secondRowOffset = gridSpacing / 2; // Half spacing to center 4 logos under 5
+    for (let col = 0; col < 4; col++) {
+      positions.push({
+        x: gridStartX + secondRowOffset + col * gridSpacing,
+        y: gridStartY + gridSpacing,
+      });
+    }
+    
     return positions;
-  };
+  }
 
-  const certPositions = generateSemiCirclePositions();
+  const yarnLogoPositions = generateGridPositions();
 
-  // Trigger certificate animation when yarn arrives
+  // Scroll animation effect
   useEffect(() => {
-    if (travelProgress === 1 && !showCertLogos) {
-      setShowCertLogos(true);
-      // Animate certificates one by one
-      const animateLogos = async () => {
-        for (let i = 0; i < CERT_LOGOS.length; i++) {
-          await new Promise(resolve => setTimeout(resolve, 200)); // Delay between each logo
-          setVisibleCertLogos(prev => [...prev, i]);
+    const handleScroll = () => {
+      if (!yarnSectionRef.current) return;
+      
+      const rect = yarnSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const sectionTop = rect.top;
+      const sectionHeight = rect.height;
+      
+      // Start animation when section is 70% visible
+      const triggerPoint = windowHeight * 0.7;
+      
+      if (sectionTop < triggerPoint && sectionTop > -sectionHeight) {
+        // Show center yarn first
+        if (!showCenterYarn) {
+          setShowCenterYarn(true);
         }
-      };
-      animateLogos();
-    }
-  }, [travelProgress, showCertLogos]);
-
-  // Reset certificates when scrolling back up
-  useEffect(() => {
-    if (travelProgress < 1) {
-      setShowCertLogos(false);
-      setVisibleCertLogos([]);
-    }
-  }, [travelProgress]);
-
-  // Smooth scroll-driven animation loop with rAF
-  useEffect(() => {
-    let rafId;
-
-    const update = () => {
-      const scrollY = window.scrollY;
-      const titleCenter = getElementCenter(titleRef.current);
-      const yarnCenter = getElementCenter(yarnSectionCenterRef.current);
-      const certYarnCenter = getElementCenter(certSectionYarnRef.current);
-
-      // 1) Heading -> Yarn center
-      let t = 0;
-      if (titleCenter && yarnCenter) {
-        const startScroll = titleCenter.y - window.innerHeight / 2;
-        const endScroll = yarnCenter.y - window.innerHeight / 2;
-        t = clamp(0, (scrollY - startScroll) / (endScroll - startScroll), 1);
+        
+        // Calculate progress through the section
+        const progress = Math.min(1, Math.max(0, (triggerPoint - sectionTop) / (windowHeight * 0.5)));
+        const totalLogos = LOGOS.length;
+        const logosToShow = Math.floor(progress * totalLogos);
+        
+        // Add logos one by one with delay
+        if (logosToShow > visibleLogos.length) {
+          setTimeout(() => {
+            setVisibleLogos(Array.from({ length: logosToShow }, (_, i) => i));
+          }, 200);
+        }
+      } else if (sectionTop > triggerPoint) {
+        // Reset when scrolled back up
+        setShowCenterYarn(false);
+        setVisibleLogos([]);
       }
-      setAnimationProgress(t);
-      setShowCircleLogos(t > 0.98);
-
-      // 2) Yarn center -> Certificates yarn
-      let travel = 0;
-      if (t >= 1 && yarnCenter && certYarnCenter) {
-        const windowCenterY = scrollY + window.innerHeight / 2;
-        const yarnY = yarnCenter.y;
-        const certY = certYarnCenter.y;
-        if (windowCenterY >= yarnY && windowCenterY <= certY) {
-          travel = (windowCenterY - yarnY) / (certY - yarnY);
-        } else if (windowCenterY > certY) travel = 1;
-      } else {
-        travel = 0;
-      }
-      setTravelProgress(travel);
-
-      rafId = requestAnimationFrame(update);
     };
 
-    rafId = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [visibleLogos.length, showCenterYarn]);
 
-  const yarnSizeYarnSection = 270;
+  // Certificate section setup
   const yarnSizeCertSection = 240;
 
-  // Only show the traveling yarn WHEN MOVING (prevents initial overlap on first load)
-  const getTravelingStyle = () => {
-    const titleCoords = getElementCenter(titleRef.current);
-    const centerCoords = getElementCenter(yarnSectionCenterRef.current);
-    const certCoords = getElementCenter(certSectionYarnRef.current);
 
-    // Phase 1: from heading to center (only if 0 < t < 1)
-    if (titleCoords && centerCoords && animationProgress > 0 && animationProgress < 1) {
-      const x = interpolate(titleCoords.x, centerCoords.x, animationProgress);
-      const y = interpolate(titleCoords.y, centerCoords.y, animationProgress);
-      const size = interpolate(60, yarnSizeYarnSection, animationProgress);
-      return {
-        position: "absolute",
-        left: x - size / 2,
-        top: y - size / 2,
-        width: size,
-        height: size,
-        pointerEvents: "none",
-        zIndex: 9999,
-        opacity: interpolate(0.2, 1, animationProgress),
-        filter: "drop-shadow(0 8px 16px rgba(0,0,0,.14))",
-        willChange: "transform, opacity",
-      };
-    }
-
-    // Phase 2: from center to certificates (only if 0 < travel < 1)
-    if (centerCoords && certCoords && animationProgress === 1 && travelProgress > 0 && travelProgress < 1) {
-      const x = interpolate(centerCoords.x, certCoords.x, travelProgress);
-      const y = interpolate(centerCoords.y, certCoords.y, travelProgress);
-      const size = interpolate(yarnSizeYarnSection, yarnSizeCertSection, travelProgress);
-      return {
-        position: "absolute",
-        left: x - size / 2,
-        top: y - size / 2,
-        width: size,
-        height: size,
-        pointerEvents: "none",
-        zIndex: 9999,
-        opacity: 1,
-        filter: "drop-shadow(0 8px 15px rgba(0,0,0,0.15))",
-        willChange: "transform",
-      };
-    }
-
-    // Otherwise: hide (prevents first-load overlap)
-    return null;
-  };
-
-  // Get certificate animation style - emerge from behind yarn
-  const getCertAnimationStyle = (idx) => {
-    const isVisible = visibleCertLogos.includes(idx);
-    const centerX = certCenterX;
-    const centerY = yarnBaseY + 120;
-    
-    // Animation stages for each certificate
-    const baseStyle = {
-      position: 'absolute',
-      width: certSize,
-      height: certSize,
-      transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-      cursor: 'pointer',
-    };
-    
-    if (!showCertLogos || !isVisible) {
-      // Hidden state - behind the yarn
-      return {
-        ...baseStyle,
-        left: centerX - certSize / 2,
-        top: centerY - certSize / 2,
-        opacity: 0,
-        transform: 'scale(0.3) translateZ(-100px)',
-        zIndex: 0,
-      };
-    }
-    
-    // Visible state - animated to position
-    return {
-      ...baseStyle,
-      left: certPositions[idx].left,
-      top: certPositions[idx].top,
-      opacity: 1,
-      transform: 'scale(1) translateZ(0)',
-      zIndex: 5,
-    };
-  };
 
   // Certificate preview handlers
-  const handleCombine = (src) => {
-    setActiveThumb(src);
+  const handleCombine = (src: string) => {
     const pdfUrl = CERT_PDF_MAP[src];
     if (pdfUrl) setActivePreview({ type: "pdf", url: pdfUrl });
     else setActivePreview({ type: "image", url: src });
@@ -280,141 +134,129 @@ export default function YarnAndCertificateCombined() {
 
   const handleExpand = () => {
     setIsCombined(false);
-    setActiveThumb(null);
     setActivePreview(null);
   };
 
-  // Render
-  const travelingStyle = getTravelingStyle();
+
 
   return (
     <>
-      {/* Traveling Yarn — rendered only while moving */}
-      {travelingStyle && (
-        <img
-          ref={travelingYarnRef}
-          src="/assets/yarn.png"
-          alt="Traveling Yarn Logo"
-          style={travelingStyle}
-          draggable={false}
-        />
-      )}
+      {/* Traveling Yarn Animation Removed */}
 
       {/* YARNS section */}
       <section ref={yarnSectionRef} id="yarns" className="relative w-full py-8 bg-white scroll-mt-24">
-        <div className="px-[50px]">
+        <div className="px-4 sm:px-8 lg:px-[50px]">
           <div className="text-center mb-8" ref={titleRef}>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">YARNS</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+              YARNS
+            </h2>
             <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-6"></div>
           </div>
 
-          <div className="relative w-full max-w-[1600px] mx-auto overflow-hidden">
-            <div className="relative w-full flex flex-col md:flex-row justify-between items-stretch gap-4 px-6 py-6">
+          <div className="relative w-full lg:max-w-[1800px] lg:mx-auto overflow-hidden">
+            <div className="relative w-full flex flex-col md:flex-row justify-between items-stretch gap-4 px-2 sm:px-4 lg:px-6 py-6 mt-[-40px]">
               {/* LEFT: circular yarn logos */}
               <div
-                className="relative w-full md:w-1/2 min-w-[330px] h-[540px] flex items-center justify-center"
-                style={{ minHeight: "540px" }}
+                className="relative w-full md:w-1/2 min-w-[1000px] h-[500px] flex items-center justify-center overflow-hidden"
+                style={{ minHeight: "500px" }}
               >
-                {/* Invisible landing spot (for measuring) */}
+                {/* Reference for scroll animation */}
                 <div
                   ref={yarnSectionCenterRef}
                   style={{
                     position: "absolute",
-                    left: 260 - 270 / 2,
-                    top: 240 - 270 / 2,
-                    width: 270,
-                    height: 270,
+                    left: gridStartX + gridSpacing,
+                    top: gridStartY + gridSpacing,
+                    width: logoSize,
+                    height: logoSize,
                     pointerEvents: "none",
                     opacity: 0,
                   }}
                 />
 
-                {/* Show static yarn only when fully landed at center and not traveling */}
-                {animationProgress === 1 && travelProgress <= 0.001 && (
-                  <img
-                    src="/assets/yarn.png"
-                    alt="Yarn"
-                    style={{
-                      position: "absolute",
-                      left: 260 - 270 / 2,
-                      top: 240 - 270 / 2,
-                      width: 270,
-                      height: 270,
-                      pointerEvents: "none",
-                      opacity: 1,
-                      zIndex: 10,
-                      transition: "opacity 0.15s",
-                    }}
-                    draggable={false}
-                  />
-                )}
-
-                {/* Circle logos */}
+                {/* Circle logos - appear one by one */}
                 {yarnLogoPositions.map((pos, idx) => (
-                  <img
+                  <div
                     key={LOGOS[idx].src}
-                    src={LOGOS[idx].src}
-                    alt={LOGOS[idx].alt}
                     style={{
                       position: "absolute",
                       left: pos.x - logoSize / 2,
                       top: pos.y - logoSize / 2,
                       width: logoSize,
                       height: logoSize,
-                      borderRadius: "50%",
-                      boxShadow: "0 2px 12px rgba(0,0,0,.15)",
-                      background: "white",
+                      opacity: visibleLogos.includes(idx) ? 1 : 0,
+                      transform: visibleLogos.includes(idx) ? 'scale(1)' : 'scale(0.3)',
+                      transition: `all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${idx * 0.1}s`,
                       zIndex: 7,
-                      opacity: showCircleLogos ? 1 : 0,
-                      transform: showCircleLogos ? "scale(1)" : "scale(0.9)",
-                      transition: `opacity 0.46s ${showCircleLogos ? 0.09 * idx + 0.11 : 0}s, transform 0.46s`,
                     }}
-                    draggable={false}
-                  />
+                  >
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '50%',
+                        border: '3px solid #22c55e',
+                        background: 'white',
+                        boxShadow: '0 4px 15px rgba(34, 197, 94, 0.2)',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '4px',
+                      }}
+                      className="hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                    >
+                      <img
+                        src={LOGOS[idx].src}
+                        alt={LOGOS[idx].alt}
+                        style={{
+                          width: idx === 0 ? '98%' : idx === 2 ? '95%' : idx === 1 ? '65%' : '85%',
+                          height: idx === 0 ? '98%' : idx === 2 ? '95%' : idx === 1 ? '65%' : '85%',
+                          objectFit: 'contain',
+                          objectPosition: 'center',
+                        }}
+                        draggable={false}
+                      />
+                    </div>
+                  </div>
                 ))}
               </div>
 
-              {/* RIGHT: original content block restored */}
+              {/* RIGHT: yarn collection content */}
               <div
-                className="w-full md:w-1/2 h-[450px] relative z-10 flex flex-col justify-center items-start p-4 space-y-6 overflow-y-auto"
-                style={{
-                  backgroundImage: `url(/assets/yarnbg.png)`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundAttachment: "fixed",
-                }}
+                className="w-full md:w-1/2 relative z-10 flex flex-col justify-center items-start pl-10 pr-2 pb-4 space-y-4"
               >
-                <span className="text-blue-300 font-semibold text-lg tracking-wide uppercase">
+                {/* <span className="text-blue-600 font-semibold text-lg tracking-wide uppercase">
                   Yarn Collection
-                </span>
+                </span> */}
 
-                <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
-                  {/* Count Range card */}
-                  <div className="flex-1 rounded-xl px-6 py-4 shadow-lg">
-                    <h4 className="text-xl md:text-2xl font-bold text-green-100 mb-2 underline underline-offset-4">
-                      Count Range
+                <div className="w-full flex flex-col gap-4">
+                  {/* Count Range card - moved to top */}
+                  <div className="w-full">
+                    <h4 className="text-xl md:text-2xl font-bold text-green-700 mb-2  underline-offset-4">
+                      COUNT RANGE
                     </h4>
-                    <p className="text-lg md:text-xl text-white drop-shadow font-semibold">
+                    <p className="text-lg md:text-xl text-gray-800 font-semibold">
                       RING SPUN NE 12 - NE 80
                       <br />
                       OPEN END NE 2 - NE 30
                     </p>
                   </div>
 
-                  {/* Variety card */}
-                  <div className="flex-1 rounded-xl px-6 py-4 shadow-lg">
-                    <h4 className="text-xl md:text-2xl font-bold text-green-100 mb-2 underline underline-offset-4">
-                      Variety
+                  {/* Variety card - moved below */}
+                  <div className="w-full">
+                    <h4 className="text-xl md:text-2xl font-bold text-green-700 mb-2  underline-offset-4">
+                      VARIETY
                     </h4>
-                    <ul className="text-lg md:text-xl text-white list-disc list-inside space-y-1 pl-2 font-semibold">
-                      <li>RING</li>
+                    <ul className="text-lg md:text-xl text-gray-800 list-disc list-inside space-y-1 pl-2 font-semibold">
+                      <li>VORTEX</li>
                       <li>COMPACT</li>
                       <li>SIRO COMPACT</li>
-                      <li>VORTEX</li>
+                      {/* <li>RING</li> */}
+                      <li>HIGH TWIST</li>
                       <li>OPEN END</li>
                       <li>SLUB</li>
-                      <li>HIGH TWIST</li>
+                      
                       <li>TFO</li>
                     </ul>
                   </div>
@@ -438,117 +280,80 @@ export default function YarnAndCertificateCombined() {
           background: 'linear-gradient(to bottom, #ffffff, #f9fafb)'
         }}
       >
-        <div className="text-center mb-12">
+        <div className="text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-wide mb-3">
             CERTIFICATIONS
           </h2>
           <div className="mx-auto w-24 h-[6px] rounded-full bg-green-600"></div>
         </div>
 
-        <div
-          className="relative"
-          style={{ 
-            width: certContainerW, 
-            height: certContainerH, 
-            margin: "0 auto", 
-            maxWidth: "100vw",
-            perspective: "1000px"
-          }}
-        >
-          {/* Yarn logo in center - always on top */}
-          <img
-            ref={certSectionYarnRef}
-            src="/assets/yarn.png"
-            alt="Yarn Logo"
-            className="absolute left-1/2 -translate-x-1/2 object-contain"
-            style={{
-              top: yarnBaseY,
-              width: yarnSizeCertSection,
-              height: (yarnSizeCertSection * 145) / 160,
-              zIndex: 10,
-              pointerEvents: "none",
-              opacity: travelProgress === 1 ? 1 : 0,
-              transition: "opacity 0.33s",
-            }}
-            draggable={false}
-          />
-
-          {/* Certificate logos - emerge from behind yarn */}
+        {/* Horizontal strip of certificate logos - like partners strip */}
+        <div className="flex justify-center items-center gap-8 md:gap-12 lg:gap-16 mt-12 mb-8 px-4 py-6">
           {CERT_LOGOS.map((src, idx) => (
             <div
               key={src}
-              style={getCertAnimationStyle(idx)}
               onClick={() => handleCombine(src)}
+              className="cursor-pointer transition-all duration-300 hover:scale-110 hover:opacity-80 flex-shrink-0"
             >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  border: '3px solid #22c55e',
-                  padding: '8px',
-                  background: 'white',
-                  boxShadow: '0 4px 15px rgba(34, 197, 94, 0.2)',
-                  transition: 'all 0.3s ease',
-                }}
-                className="hover:shadow-2xl hover:scale-105"
-              >
-                <img
-                  src={src}
-                  alt={`Certification Logo ${idx + 1}`}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '50%',
-                    objectFit: 'contain',
-                    background: 'white',
-                  }}
-                  draggable={false}
-                />
-              </div>
+              <img
+                src={src}
+                alt={`Certification Logo ${idx + 1}`}
+                className="h-16 w-auto md:h-20 lg:h-24 object-contain  hover:grayscale-0 transition-all duration-300"
+                draggable={false}
+              />
             </div>
           ))}
         </div>
 
-        {/* Inline combined preview (restored) */}
+        {/* Hidden reference for yarn positioning (if needed for other functionality) */}
+        <img
+          ref={certSectionYarnRef}
+          src="/assets/yarn.png"
+          alt="Yarn Logo Reference"
+          className="opacity-0 absolute -z-10 pointer-events-none"
+          style={{
+            width: yarnSizeCertSection,
+            height: (yarnSizeCertSection * 145) / 160,
+          }}
+          draggable={false}
+        />
+
+        {/* Modal overlay for certificate preview */}
         {isCombined && activePreview && (
-          <div className="relative flex flex-col md:flex-row justify-between items-center gap-6 w-full max-w-5xl transition-all duration-700 mt-10">
-            {activeThumb && (
-              <div
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={handleExpand}
+          >
+            <div 
+              className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
                 onClick={handleExpand}
-                className="cursor-pointer w-[160px] sm:w-[200px] md:w-[260px] h-auto rounded-md shadow-lg hover:scale-105 transition-transform duration-500"
+                className="absolute top-4 right-4 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors duration-200 z-10 shadow-lg"
+                aria-label="Close preview"
               >
-                <img src={activeThumb} alt="Active Certification" className="w-full h-auto object-contain rounded-md" />
-              </div>
-            )}
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
 
-            <div className="w-full md:w-1/2 flex justify-center items-center px-4">
-              <div className="w-full max-w-[450px] h-[600px] bg-white border border-gray-300 rounded-lg p-4 flex flex-col relative">
-                <button
-                  onClick={handleExpand}
-                  className="absolute top-2 right-2 w-8 h-8 bg-gray-800 hover:bg-gray-700 text-white rounded-full flex items-center justify-center transition-colors duration-200 z-10 shadow-lg"
-                  aria-label="Close preview"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-
-                <div className="w-full h-full flex justify-center items-center">
-                  {activePreview.type === "pdf" ? (
-                    <iframe
-                      src={activePreview.url}
-                      title="Certificate PDF Preview"
-                      className="w-full h-full rounded-md transition-all duration-700 ease-in-out"
-                    />
-                  ) : (
-                    <img
-                      src={activePreview.url}
-                      alt="Active Certification Preview"
-                      className="max-w-full max-h-full object-contain rounded-md transition-all duration-700 ease-in-out"
-                    />
-                  )}
-                </div>
+              {/* Certificate content */}
+              <div className="p-6 h-full">
+                {activePreview.type === "pdf" ? (
+                  <iframe
+                    src={activePreview.url}
+                    title="Certificate PDF Preview"
+                    className="w-full h-[80vh] rounded-lg border-0"
+                  />
+                ) : (
+                  <img
+                    src={activePreview.url}
+                    alt="Active Certification Preview"
+                    className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                  />
+                )}
               </div>
             </div>
           </div>

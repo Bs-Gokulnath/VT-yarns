@@ -44,12 +44,12 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white backdrop-blur-sm z-50">
-      <div className="container mx-auto px-4 lg:px-18 py-4">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-18 py-4">
         <div className="flex items-center justify-between">
           {/* ✅ Video always visible for both desktop & mobile */}
           <div className="flex items-center space-x-3">
             <video
-              src="/assets/VTS logo2.mp4" // make sure file name has no spaces
+              src="/assets/vts logo animation.mp4" // make sure file name has no spaces
               autoPlay
               loop
               muted={true}
