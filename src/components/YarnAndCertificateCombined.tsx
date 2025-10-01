@@ -1,32 +1,60 @@
 import { useState, useRef, useEffect } from "react";
 
+// Import images directly to ensure they're included in the build
+import viscoseImg from "/assets/viscose.png";
+import modalImg from "/assets/modal.png";
+import excelImg from "/assets/excel.png";
+import livecoImg from "/assets/liveco.png";
+import bambooImg from "/assets/bamboo.jpg";
+import circuloseImg from "/assets/circulose.png";
+import tencelImg from "/assets/tencel.png";
+import ecoveraImg from "/assets/ecovera.png";
+import refinraImg from "/assets/refinra.png";
+import cert1Img from "/assets/cert1.png";
+import cert2Img from "/assets/cert2.png";
+import cert3Img from "/assets/cert3.png";
+import cert4Img from "/assets/cert4.png";
+import cert5Img from "/assets/cert5.png";
+import yarnImg from "/assets/yarn.png";
+import oekoPdf from "/assets/OEKO_Certificate.pdf";
+import controlUnionPdf from "/assets/CONTROLUNION_Certificate.pdf";
+
 const LOGOS = [
-  { src: "/assets/viscose.png", alt: "Viscose" },
-  { src: "/assets/modal.png", alt: "Modal" },
-  { src: "/assets/excel.png", alt: "Excel" },
-  { src: "/assets/liveco.png", alt: "Liveco" },
-  { src: "/assets/bamboo.jpg", alt: "Bamboo" },
-  { src: "/assets/circulose.png", alt: "Circulose" },
-  { src: "/assets/tencel.png", alt: "Tencel" },
-  { src: "/assets/ecovera.png", alt: "Ecovera" },
-  { src: "/assets/refinra.png", alt: "Refinra" },
+  { src: viscoseImg, alt: "Viscose" },
+  { src: modalImg, alt: "Modal" },
+  { src: excelImg, alt: "Excel" },
+  { src: livecoImg, alt: "Liveco" },
+  { src: bambooImg, alt: "Bamboo" },
+  { src: circuloseImg, alt: "Circulose" },
+  { src: tencelImg, alt: "Tencel" },
+  { src: ecoveraImg, alt: "Ecovera" },
+  { src: refinraImg, alt: "Refinra" },
 ];
 
 const CERT_LOGOS = [
-  "/assets/cert1.png",
-  "/assets/cert2.png",
-  "/assets/cert3.png",
-  "/assets/cert4.png",
-  "/assets/cert5.png",
+  cert1Img,
+  cert2Img,
+  cert3Img,
+  cert4Img,
+  cert5Img,
 ];
 
 const CERT_PDF_MAP: Record<string, string> = {
-  "/assets/cert1.png": "/assets/OEKO_Certificate.pdf",
-  "/assets/cert4.png": "/assets/CONTROLUNION_Certificate.pdf",
-  "/assets/cert5.png": "/assets/CONTROLUNION_Certificate.pdf",
+  [cert1Img]: oekoPdf,
+  [cert4Img]: controlUnionPdf,
+  [cert5Img]: controlUnionPdf,
 };
 
 type Preview = { type: "image" | "pdf"; url: string } | null;
+
+// Create a fallback SVG as data URL for missing images
+const createFallbackImage = (text: string) => {
+  const svg = `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2"/>
+    <text x="50%" y="50%" text-anchor="middle" dy="0.35em" font-family="Arial" font-size="12" fill="#6b7280">${text}</text>
+  </svg>`;
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+};
 
 export default function YarnAndCertificateCombined() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -46,10 +74,11 @@ export default function YarnAndCertificateCombined() {
 
 
   // Geometry for yarn & logos - 5+4 layout (5 in first row, 4 centered in second row)
-  const logoSize = 170;
-  const gridSpacing = 190;
-  const gridStartX = 150;
-  const gridStartY = 150;
+  // Responsive sizing to prevent text overlap
+  const logoSize = 150; // Reduced base size to prevent overlap
+  const gridSpacing = 180; // Reduced spacing
+  const gridStartX = 110; // Adjusted starting position
+  const gridStartY = 100;
 
   function generateGridPositions() {
     const positions = [];
@@ -125,6 +154,8 @@ export default function YarnAndCertificateCombined() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [visibleLogos.length, showCenterYarn]);
 
+
+
   // Certificate section setup
   const yarnSizeCertSection = 240;
 
@@ -150,24 +181,24 @@ export default function YarnAndCertificateCombined() {
       {/* Traveling Yarn Animation Removed */}
 
       {/* YARNS section */}
-      <section ref={yarnSectionRef} id="yarns" className="relative w-full py-8 bg-white scroll-mt-24">
-        <div className="px-4 sm:px-8 lg:px-[50px]">
-          <div className="text-center mb-8" ref={titleRef}>
+      <section ref={yarnSectionRef} id="yarns" className="relative w-full py-4 bg-white scroll-mt-24">
+        <div className="px-6 sm:px-8 lg:px-16 xl:px-20">
+          <div className="text-center mb-6" ref={titleRef}>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
               YARNS
             </h2>
-            <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-6"></div>
+            <div className="mx-auto w-16 h-[5px] rounded-full bg-green-600 mb-4"></div>
           </div>
 
           <div className="relative w-full max-w-full overflow-hidden">
-            <div className="relative w-full flex flex-col md:flex-row justify-between items-stretch gap-4 px-2 sm:px-4 lg:px-6 py-6 mt-[-40px]">
-              {/* LEFT: yarn logos */}
-              <div className="relative w-full md:w-3/5 lg:w-2/3 xl:w-3/4 overflow-hidden">
+            <div className="relative w-full flex flex-col justify-center items-center gap-4 px-1 sm:px-2 lg:px-4 py-4 mt-[-20px]">
+              {/* YARN LOGOS AND TEXT CONTENT COMBINED */}
+              <div className="relative w-full max-w-[1920px] overflow-hidden">
                 
                 {/* Mobile Grid Layout: 4+3+2+1 */}
-                <div className="md:hidden w-full py-8">
+                <div className="lg:hidden w-full py-4 sm:py-6">
                   {/* Row 1: 4 logos */}
-                  <div className="grid grid-cols-4 gap-4 mb-6 px-2">
+                  <div className="grid grid-cols-4 gap-2 min-[380px]:gap-4 sm:gap-6 mb-3 sm:mb-6 px-2 sm:px-4">
                     {LOGOS.slice(0, 4).map((logo, idx) => (
                       <div
                         key={logo.src}
@@ -178,7 +209,7 @@ export default function YarnAndCertificateCombined() {
                           transitionDelay: `${idx * 0.1}s`
                         }}
                       >
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-green-500 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center p-1">
+                        <div className="w-12 h-12 min-[380px]:w-14 min-[380px]:h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full border-2 border-green-500 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center p-1">
                           <img
                             src={logo.src}
                             alt={logo.alt}
@@ -188,6 +219,12 @@ export default function YarnAndCertificateCombined() {
                               height: idx === 0 ? '95%' : idx === 2 ? '90%' : idx === 1 ? '60%' : '80%',
                             }}
                             draggable={false}
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              console.warn(`Failed to load image: ${logo.src}, using fallback`);
+                              target.src = createFallbackImage(logo.alt);
+                            }}
+                            loading="lazy"
                           />
                         </div>
                       </div>
@@ -195,7 +232,8 @@ export default function YarnAndCertificateCombined() {
                   </div>
 
                   {/* Row 2: 3 logos */}
-                  <div className="grid grid-cols-3 gap-6 mb-6 px-8">
+                                    {/* Row 2: 3 logos */}
+                  <div className="grid grid-cols-3 gap-4 sm:gap-8 mb-4 sm:mb-6 px-6 sm:px-12">
                     {LOGOS.slice(4, 7).map((logo, idx) => (
                       <div
                         key={logo.src}
@@ -206,7 +244,7 @@ export default function YarnAndCertificateCombined() {
                           transitionDelay: `${(idx + 4) * 0.1}s`
                         }}
                       >
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-green-500 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center p-1">
+                        <div className="w-10 h-10 min-[380px]:w-12 min-[380px]:h-12 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full border-2 border-green-500 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center p-1">
                           <img
                             src={logo.src}
                             alt={logo.alt}
@@ -223,7 +261,7 @@ export default function YarnAndCertificateCombined() {
                   </div>
 
                   {/* Row 3: 2 logos */}
-                  <div className="grid grid-cols-2 gap-8 mb-6 px-16">
+                  <div className="grid grid-cols-2 gap-6 sm:gap-12 mb-4 sm:mb-6 px-12 sm:px-24">
                     {LOGOS.slice(7, 9).map((logo, idx) => (
                       <div
                         key={logo.src}
@@ -234,7 +272,7 @@ export default function YarnAndCertificateCombined() {
                           transitionDelay: `${(idx + 7) * 0.1}s`
                         }}
                       >
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-green-500 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center p-1">
+                        <div className="w-10 h-10 min-[380px]:w-12 min-[380px]:h-12 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full border-2 border-green-500 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center p-1">
                           <img
                             src={logo.src}
                             alt={logo.alt}
@@ -245,12 +283,45 @@ export default function YarnAndCertificateCombined() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Mobile Text Content */}
+                  <div className="w-full px-2 sm:px-4 mt-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                      {/* Count Range card */}
+                      <div className="text-center sm:text-right bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                        <h4 className="text-lg sm:text-xl font-bold text-green-700 mb-2">
+                          COUNT RANGE
+                        </h4>
+                        <p className="text-base sm:text-lg text-gray-800 font-semibold">
+                          RING SPUN NE 12 - NE 80
+                          <br />
+                          OPEN END NE 2 - NE 30
+                        </p>
+                      </div>
+
+                      {/* Variety card */}
+                      <div className="text-center sm:text-right bg-white rounded-lg p-4 shadow-sm border border-green-100">
+                        <h4 className="text-lg sm:text-xl font-bold text-green-700 mb-2">
+                          VARIETY
+                        </h4>
+                        <ul className="text-base sm:text-lg text-gray-800 font-semibold space-y-1 list-none">
+                          <li>VORTEX</li>
+                          <li>COMPACT</li>
+                          <li>SIRO COMPACT</li>
+                          <li>HIGH TWIST</li>
+                          <li>OPEN END</li>
+                          <li>SLUB</li>
+                          <li>TFO</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Desktop Layout: Original absolute positioning (hidden on mobile) */}
+                {/* Desktop Layout: Original absolute positioning (hidden on mobile/tablet) */}
                 <div
-                  className="hidden md:flex items-center justify-center h-[500px] md:w-[1200px] lg:w-[1400px] xl:w-[1600px]"
-                  style={{ minHeight: "500px" }}
+                  className="hidden lg:flex items-center justify-start h-[350px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px] w-full max-w-[1200px] lg:max-w-[1400px] xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto relative pr-60 lg:pr-64 xl:pr-72 2xl:pr-80"
+                  style={{ minHeight: "350px" }}
                 >
                   {/* Reference for scroll animation */}
                   <div
@@ -312,50 +383,43 @@ export default function YarnAndCertificateCombined() {
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
 
-              {/* RIGHT: yarn collection content */}
-              <div
-                className="w-full md:w-2/5 lg:w-1/3 xl:w-1/4 relative z-10 flex flex-col justify-center items-start md:items-end pl-10 md:pl-0 md:pr-8 lg:pr-12 xl:pr-16 pr-2 pb-4 space-y-4"
-              >
-                {/* <span className="text-blue-600 font-semibold text-lg tracking-wide uppercase">
-                  Yarn Collection
-                </span> */}
+                  {/* Desktop Text Content - positioned on the right side with proper spacing */}
+                  <div className="absolute right-1 lg:right-2 xl:right-4 2xl:right-8 top-1/2 transform -translate-y-1/2 w-100 lg:w-64 xl:w-72 2xl:w-80 z-20 mt-[-30px]">
+                    <div className="flex flex-col gap-6">
+                      {/* Count Range card */}
+                      <div className="">
+                        <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-green-700 mb-2 lg:mb-3 text-right">
+                          COUNT RANGE
+                        </h4>
+                        <p className="text-sm lg:text-base xl:text-lg text-gray-800 font-semibold text-right leading-relaxed">
+                          RING SPUN NE 12 - NE 80
+                          <br />
+                          OPEN END NE 2 - NE 30
+                        </p>
+                      </div>
 
-                <div className="w-full flex flex-col gap-4 md:text-right">
-                  {/* Count Range card - moved to top */}
-                  <div className="w-full">
-                    <h4 className="text-xl md:text-2xl font-bold text-green-700 mb-2 underline-offset-4">
-                      COUNT RANGE
-                    </h4>
-                    <p className="text-lg md:text-xl text-gray-800 font-semibold">
-                      RING SPUN NE 12 - NE 80
-                      <br />
-                      OPEN END NE 2 - NE 30
-                    </p>
-                  </div>
-
-                  {/* Variety card - moved below */}
-                  <div className="w-full">
-                    <h4 className="text-xl md:text-2xl font-bold text-green-700 mb-2 underline-offset-4">
-                      VARIETY
-                    </h4>
-                    <ul className="text-lg md:text-xl text-gray-800 space-y-1 font-semibold md:list-none list-disc list-inside pl-2 md:pl-0">
-                      <li>VORTEX</li>
-                      <li>COMPACT</li>
-                      <li>SIRO COMPACT</li>
-                      {/* <li>RING</li> */}
-                      <li>HIGH TWIST</li>
-                      <li>OPEN END</li>
-                      <li>SLUB</li>
-                      
-                      <li>TFO</li>
-                    </ul>
+                      {/* Variety card */}
+                      <div className="">
+                        <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-green-700 mb-2 lg:mb-3 text-right">
+                          VARIETY
+                        </h4>
+                        <ul className="text-sm lg:text-base xl:text-lg text-gray-800 font-semibold space-y-1 lg:space-y-2 text-right list-none">
+                          <li>VORTEX</li>
+                          <li>COMPACT</li>
+                          <li>SIRO COMPACT</li>
+                          <li>HIGH TWIST</li>
+                          <li>OPEN END</li>
+                          <li>SLUB</li>
+                          <li>TFO</li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              {/* END right block */}
+
+
             </div>
           </div>
         </div>
@@ -428,7 +492,7 @@ export default function YarnAndCertificateCombined() {
         {/* Hidden reference for yarn positioning (if needed for other functionality) */}
         <img
           ref={certSectionYarnRef}
-          src="/assets/yarn.png"
+          src={yarnImg}
           alt="Yarn Logo Reference"
           className="opacity-0 absolute -z-10 pointer-events-none"
           style={{

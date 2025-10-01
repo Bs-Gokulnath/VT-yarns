@@ -146,7 +146,7 @@ export default function AboutSection() {
               isVisible ? "animate-fade-in-delay" : "opacity-0"
             }`}
           >
-            VTS is a third-generation family company with a legacy of over half a century in the textile industry.
+            V. Thangavel and Sons Private Limited (VTS) is a third-generation family company with a legacy of over half a century in the textile industry.
           </p>
          
           <p

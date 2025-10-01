@@ -1,0 +1,16 @@
+{
+  "name": "VT Yarns",
+  "short_name": "VTS",
+  "description": "VT Yarns - Premium Yarn Manufacturing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "/assets/vts-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
